@@ -1,9 +1,20 @@
-components.OF <- function (cons_feat_array, all_site_action_int_combs, site_action_array, action_costs, site_threat_array_cat, responses_to_actions, site_species_array, all_upstream_connections, boundary.file, required_actions, C.P, Start_prop = 0.2)
-{
+components.OF <- function(cons_feat_array,
+                          all_site_action_int_combs,
+                          site_action_array,
+                          action_costs,
+                          site_threat_array_cat,
+                          responses_to_actions,
+                          site_species_array,
+                          all_upstream_connections,
+                          boundary.file,
+                          required_actions,
+                          C.P,
+                          Start_prop = 0.2){
+
   #define variables within the function
   no.sites <- nrow(site_action_array)
-  no.species <- nrow(cons_feat_array)  
-  no.actions <- ncol(site_action_array)  
+  no.species <- nrow(cons_feat_array)
+  no.actions <- ncol(site_action_array)
   Target <- cons_feat_array[,"target"]
   S.P.F <- cons_feat_array[,"spf"]
 
@@ -96,7 +107,7 @@ components.OF <- function (cons_feat_array, all_site_action_int_combs, site_acti
 
   #calculate species benefit at each site
   SpeciesBenefit_mat <- pmin(SpeciesCount_mat / required_actions, 1) * site_species_array
-  
+
   #calculate total species benefit
   SpeciesBenefit <- apply(SpeciesBenefit_mat, 2, sum)
 

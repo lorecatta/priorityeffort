@@ -1,6 +1,20 @@
-Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_array, action_costs, site_threat_array_cat, responses_to_actions, site_species_array, all_upstream_connections, boundary.file, required_actions, C.P, all_downstream_connections, 
-                     no_ITER = 1000000, Temp_zero = 1, cooling_factor = 0.99999, print_iter = 5){
-  
+Optimize <- function(cons_feat_array,
+                     all_site_action_int_combs,
+                     site_action_array,
+                     action_costs,
+                     site_threat_array_cat,
+                     responses_to_actions,
+                     site_species_array,
+                     all_upstream_connections,
+                     boundary.file,
+                     required_actions,
+                     C.P,
+                     all_downstream_connections,
+                     no_ITER = 1000000,
+                     Temp_zero = 1,
+                     cooling_factor = 0.99999,
+                     print_iter = 5){
+
   #define variables within the function
   no.species <- nrow(cons_feat_array)
   no.actions <- ncol(site_action_array)
@@ -11,13 +25,13 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
   Temp <- Temp_zero
 
   #create empty matrix for output
-  mat_headings <- c("Iter", "Site", "Action", "Intensity", "Move", "OF", "CC", "CostCount", "PC", 
+  mat_headings <- c("Iter", "Site", "Action", "Intensity", "Move", "OF", "CC", "CostCount", "PC",
                     "PenaltyCount", "CP", "ConnPenalty", "delta_OF", "choice", "Temp", "testval", "rnd_value")
-  
+
   Out_mat <- matrix(0, nrow=no_ITER/print_iter, ncol=length(mat_headings))
   colnames(Out_mat) <- 1:dim(Out_mat)[2]
   colnames(Out_mat) <- mat_headings
-  
+
   list_of_outputs <- vector("list", 4)
 
   #calculate the initial components of the objective function
@@ -40,7 +54,7 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
   for (IT in 1:no_ITER)
   {
     #cat("iteration =", IT, "\n") #debugging
-    
+
     site_action_array_1 <- site_action_array
     CostCount_1 <- CostCount
     SpeciesBenefit_1 <- SpeciesBenefit
@@ -173,7 +187,7 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
 
     CostCount_mat [rnd_site,rnd_action] <- run_count[[1]]
     SpeciesCount_list [[rnd_site]][rnd_action,] <- run_count[[2]]
-        
+
     SpeciesCount_vec <- apply(SpeciesCount_list [[rnd_site]], 2, sum)
 
     #calculate species benefit at rnd site
@@ -184,14 +198,14 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
     #calculate total species benefit
     SpeciesBenefit <- apply(SpeciesBenefit_mat, 2, sum)
     #cat("SpeciesBenefit =", SpeciesBenefit, "\n") #debugging
-    
+
     #calculate penalty count
     PenaltyCount_vec <- pmax.int(Target - SpeciesBenefit, 0)
     PenaltyCount <- sum(PenaltyCount_vec)
 
     #calculate total cost for all sites
     CostCount <- sum(CostCount_mat)
-    
+
     #calculate connectivity penalty
     ConnPenalty <- sum(boundary.file[, "boundary"] * boundary.file[, "penalty"])
 
@@ -201,22 +215,22 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
     #a_A_R_label <- paste(paste("a", rnd_action, sep=""), "A/R", sep="")
 
     OF_value <- CostCount + sum(S.P.F * PenaltyCount_vec) + C.P * ConnPenalty
-    
+
     #calculate delta
     delta_OF <- OF_value - as.vector(OF_value_1)
 
     if(IT %% print_iter==0)
     {
       # fill the output matrix with checks for debugging
-      
+
       IT_to_print <- IT/print_iter
-      
+
       Out_mat [IT_to_print,"CC"] <- CostCount
       Out_mat [IT_to_print,"PC"] <- PenaltyCount
       Out_mat [IT_to_print,"CP"] <- ConnPenalty
-    
+
     }
-    
+
     #accept bad move?
     if(delta_OF <= 0)
     {
@@ -261,12 +275,12 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
       # fill the output matrix
 
       IT_to_print <- IT/print_iter
-      
+
       Out_mat [IT_to_print,"Iter"] <- IT
       Out_mat [IT_to_print,"Site"] <- rnd_site
       Out_mat [IT_to_print,"Action"] <- rnd_action
       Out_mat [IT_to_print,"Intensity"] <- a_i
-      Out_mat [IT_to_print,"Move"] <- a_A_R    
+      Out_mat [IT_to_print,"Move"] <- a_A_R
       Out_mat [IT_to_print,"OF"] <- OF_value
       Out_mat [IT_to_print,"CostCount"] <- CostCount
       Out_mat [IT_to_print,"PenaltyCount"] <- PenaltyCount
@@ -276,9 +290,9 @@ Optimize <- function(cons_feat_array, all_site_action_int_combs, site_action_arr
       Out_mat [IT_to_print,"Temp"] <- Temp
       Out_mat [IT_to_print,"testval"] <- testval
       Out_mat [IT_to_print,"rnd_value"] <- rnd_value
-    
+
     }
-    
+
     #update temperature
     Temp <- Temp * cooling_factor
 

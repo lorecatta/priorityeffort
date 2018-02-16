@@ -1,5 +1,10 @@
-one.run <- function(x, cons_feat_array, all_site_action_int_combs, action_costs, site_threat_array_cat, site_species_array, species_responses, all_upstream_connections, boundary.file, all_downstream_connections)
-{
+one_run <- function(x,
+                    parms,
+                    site_threat_array,
+                    planning_unit,
+                    cons_feat_array,
+                    site_species_array,
+                    species_responses) {
 
   #browser()
 
@@ -9,18 +14,17 @@ one.run <- function(x, cons_feat_array, all_site_action_int_combs, action_costs,
   ID_run <- x$ID_run
   cat("ID run =", ID_run, "\n")
 
-  CP <- x$CP
-  cat("CSM =", CP, "\n")
-
-  estimate <- x$estimate
-  cat("expert response =", estimate, "\n")
-
   target_level <- x$target_level
   cat("target level =", target_level, "\n")
 
-  responses_to_actions <- get.responses.to.actions (species_responses, cons_feat_array, estimate)
-  responses_to_actions.best_guesses <- get.responses.to.actions (species_responses, cons_feat_array, 1)
-  required_actions <- get.required_actions (site_threat_array_cat, responses_to_actions.best_guesses, cons_feat_array)
+  estimate <- 1 # at the moment we use experts' best estimates for the prioritization
+
+  site_threat_array_cat <- get.threat.intensity.category(parms, site_threat_array)
+  all_site_action_int_combs <- get.site.action.intensities.combs(parms, site_threat_array_cat)
+  action_costs <- get.action.costs(site_threat_array_cat, planning_unit)
+  responses_to_actions <- get.responses.to.actions(species_responses, cons_feat_array, estimate)
+  responses_to_actions.best_guesses <- get.responses.to.actions(species_responses, cons_feat_array, 1)
+  required_actions <- get.required_actions(site_threat_array_cat, responses_to_actions.best_guesses, cons_feat_array)
 
   site_action_array <- site_threat_array_cat
   site_action_array[] <- 0

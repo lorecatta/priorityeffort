@@ -2,6 +2,12 @@
 
 input_pt <- "data_raw"
 
+base_info <- c("area_of_occ", "target", "spf", "FaunalGroup", "EcologicalGroup")
+
+occurrence_limits <- c(500, 10000)
+
+target_limits <- c(1, 0.1)
+
 
 # load data -------------------------------------------------------------------
 
