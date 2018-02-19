@@ -2,8 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-output/
-figures/
 hpc/
 doc/
-*.Rproj
+output/
