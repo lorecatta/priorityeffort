@@ -28,7 +28,7 @@ plot_trackers <- function(solution){
           axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0),
           axis.title.y = element_text(hjust=0.5, vjust=0),
           axis.text=element_text(size=12),
-          plot.margin=unit(c(1,1,1,1), "cm"),
+          plot.margin=unit(c(0,0.2,0,0), "in"),
           plot.title = element_text(lineheight=1, face="bold"))
 
   cost_plot <- ggplot(ann_summary_df, aes(x=Iter, y=CostCount)) +
@@ -45,7 +45,7 @@ plot_trackers <- function(solution){
           axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0),
           axis.title.y = element_text(hjust=0.5, vjust=0),
           axis.text=element_text(size=12),
-          plot.margin=unit(c(1,1,1,1), "cm"),
+          plot.margin=unit(c(0,0.2,0,0), "in"),
           plot.title = element_text(lineheight=1, face="bold"))
 
   penalty_plot <- ggplot(ann_summary_df, aes(x=Iter, y=PenaltyCount)) +
@@ -62,14 +62,14 @@ plot_trackers <- function(solution){
           axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0),
           axis.title.y = element_text(hjust=0.5, vjust=0),
           axis.text=element_text(size=12),
-          plot.margin=unit(c(1,1,1,1), "cm"),
+          plot.margin=unit(c(0,0.2,0.2,0), "in"),
           plot.title = element_text(lineheight=1, face="bold"))
 
   # lines(1:nrow(ann_summary_df), pen, col="red")
   # lines(1:nrow(ann_summary_df), cost, col="blue")
   # legend("topright", c("Penalty","Cost"), lty=c(1,1), col=c("red","blue"), bty="n",cex=1.2)
 
-  out_path <- file.path("figures", paste("figures_exp", ID_exp, sep="_"), "trackers")
+  out_path <- file.path("figures", paste("exp", ID_exp, sep="_"), "trackers")
   dir.create(out_path, FALSE, TRUE)
   plot_name <- sprintf("tracker_%s%s", paste("run", ID_run, sep="_"), ".png")
 
