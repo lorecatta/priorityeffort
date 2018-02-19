@@ -5,7 +5,7 @@ my_resources <- c(
   file.path("R", "count_persistence.R"),
   file.path("R", "calculate_OF.R"),
   file.path("R", "optimize_actions.R"),
-  file.path("R", "plot_optimize.R"),
+  file.path("R", "plot_trackers.R"),
   file.path("R", "one_run.R"),
   file.path("R", "utility_functions.r"))
 
@@ -21,38 +21,43 @@ ctx <- context::context_save(path = root,
 
 # define parameters -----------------------------------------------------------
 
+
 parameters <- list(
   Exp = 1,
-  Replicates = 10,
-  TargetLevel = c(seq(50, 1000, 50), seq(1250, 10000, 250)))
+  Replicates = 1,
+  no_ITER = 100,
+  Temp_zero = 1,
+  cooling_factor = 0.99999,
+  fixed_targets = TRUE,
+  occurrence_limits = c(500, 10000),
+  target_limits = c(1, 0.1),
+  TargetLevel = c(500, 1000, 1500),               # c(seq(50, 1000, 50), seq(1250, 10000, 250))
+  print_every_iter = 5)
 
 
-# set up a couple of things ---------------------------------------------------
+# load context ----------------------------------------------------------------
 
-
-n_cores <- 3
 
 context::context_load(ctx)
-context::parallel_cluster_start(n_cores)
 
-exp.des <- create.exp.des(parameters)
-exp_des_ls <- df_to_list(exp.des, use_names = TRUE)
+
+# create combinations of factor -----------------------------------------------
+
+
+exp_des <- create_exp_des(parameters)
 
 
 # run -------------------------------------------------------------------------
 
 
-run <- loop(exp_des_ls[1:3],
-            one_run,
-            cons_feat_array,
-            all_site_action_int_combs,
-            action_costs,
-            site_threat_array_cat,
-            site_species_array,
-            species_responses,
-            all_upstream_connections,
-            boundary.file,
-            all_downstream_connections,
-            parallel = TRUE)
+solution <- wrapper(parms = parameters,
+                    exp_des = exp_des,
+                    site_threat_array = site_threat_array,
+                    planning_unit = planning_unit,
+                    cons_feat_array = cons_feat_array,
+                    site_species_array = site_species_array,
+                    species_responses = species_responses,
+                    parallel = TRUE)
 
-context::parallel_cluster_stop()
+# plot temperature, cost and species penalty of one solution
+plot_trackers(solution[[2]])

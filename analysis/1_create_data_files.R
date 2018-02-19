@@ -1,12 +1,13 @@
+# load the package
+devtools::load_all()
+
+
+# define parameters -----------------------------------------------------------
 
 
 input_pt <- "data_raw"
 
 base_info <- c("area_of_occ", "target", "spf", "FaunalGroup", "EcologicalGroup")
-
-occurrence_limits <- c(500, 10000)
-
-target_limits <- c(1, 0.1)
 
 
 # load data -------------------------------------------------------------------
@@ -28,13 +29,8 @@ species_responses_df <- read.csv(file.path(input_pt, "Species Responses.csv"),
                                  header = TRUE)
 
 
-# set area-of-occ scaled targets ----------------------------------------------
-
-
-#cons_feat_array_df <- set_scaled_targets(cons_feat_array_df, occurrence_limits, target_limits)
-
-
 # ---------------------------------------- pre processing
+
 
 cons_feat_array <- setNames(as.matrix(cons_feat_array_df[, base_info]),
                             colnames(cons_feat_array_df[, base_info]))
