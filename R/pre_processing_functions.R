@@ -262,6 +262,8 @@ get.required_actions <- function(site_threat_array_cat, responses_to_actions, co
 ###
 set_fixed_targets <- function(cons_feat_array, site_species_array, target.level) {
 
+  #browser()
+
   Target_values <- rep(0, nrow(cons_feat_array))
 
   # get total area of occupancy for each species
