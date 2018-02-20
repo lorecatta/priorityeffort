@@ -39,6 +39,9 @@ site_species_array <- cbind(fishes@data[, setdiff(names(fishes@data), to_remove)
                             turtles@data[, setdiff(names(turtles@data), to_remove)],
                             birds@data[, setdiff(names(birds@data), to_remove)])
 
+# remove `mel_sino` and `ARDEO_AU`
+site_species_array <- site_species_array[, setdiff(names(site_species_array), c("mel_sino", "ARDEO_AU"))]
+
 site_species_array <- as.matrix(site_species_array)
 
 
@@ -51,8 +54,7 @@ sp_names_df <- data.frame(sp_names = colnames(site_species_array),
                           spf = 0,
                           stringsAsFactors = FALSE)
 
-# remove `mel_sino` and `ARDEO_AU`
-cons_feat_array <- inner_join(sp_names_df, eco_g_lookup)
+cons_feat_array <- left_join(sp_names_df, eco_g_lookup)
 
 # remove some fields
 cons_feat_array <- as.matrix(cons_feat_array[, c("area_of_occ",
