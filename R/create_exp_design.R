@@ -21,5 +21,10 @@ create_exp_des <- function(parms) {
 
   out$ID_run <- seq_len(nrow(out))
 
+  out_path <- file.path("output", paste("exp", experiment_ID, sep = "_"))
+  dir.create(out_path, FALSE, TRUE)
+  out_file_name <- paste0("experimental_design", ".csv")
+  write.csv(out, file.path(out_path, out_file_name), row.names = FALSE)
   out
+
 }
