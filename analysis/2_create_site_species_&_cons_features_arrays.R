@@ -60,6 +60,10 @@ cons_feat_array <- cons_feat_array[, c("ID",
                                        "FaunalGroup",
                                        "EcologicalGroup")] # ID first
 
+
+# save internal data files ----------------------------------------------------
+
+
 devtools::use_data(site_species_array, site_species_array, overwrite = TRUE)
 
 devtools::use_data(cons_feat_array, cons_feat_array, overwrite = TRUE)

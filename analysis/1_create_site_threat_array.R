@@ -7,7 +7,7 @@ library(rgdal)
 
 thr_in_pth <- file.path("data_raw", "shapefiles", "threats")
 
-threat_names <- c("Buffalo", "Pig", "Grazing", "Weed")
+threat_names <- c("buffalo", "pig", "weed", "grazing")
 
 
 # load data -------------------------------------------------------------------
@@ -35,5 +35,9 @@ site_threat_array <- round(cbind(invasives_scal, grazing@data[, "MEAN"]), 3)
 
 colnames(site_threat_array) <- 1:dim(site_threat_array)[2]
 colnames(site_threat_array) <- threat_names
+
+
+# save internal data file -----------------------------------------------------
+
 
 devtools::use_data(site_threat_array, site_threat_array, overwrite = TRUE)
