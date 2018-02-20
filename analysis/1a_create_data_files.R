@@ -48,6 +48,10 @@ sp_names_df <- data.frame(sp_names = colnames(site_species_array),
                           spf = 0,
                           stringsAsFactors = FALSE)
 
+
+# create conservation feature array -------------------------------------------
+
+
 # remove `mel_sino` and `ARDEO_AU`
 cons_feat_array <- inner_join(sp_names_df, eco_g_lookup)
 
