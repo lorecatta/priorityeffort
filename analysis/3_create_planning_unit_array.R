@@ -9,6 +9,8 @@ library(rgdal)
 
 in_pth <- file.path("data_raw", "shapefiles")
 
+threat_names <- c("buffalo", "pig", "weed", "grazing")
+
 # define geographic coordinate system
 # long,lat geographical, datum WGS84
 geo_CRS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
@@ -21,8 +23,8 @@ prj_CRS <- CRS('+proj=aea +lat_1=-18 +lat_2=-36 +lat_0=0 +lon_0=132 +x_0=0 +y_0=
 # AUS$ per ha
 cost_per_ha <- c(buffalo_ha = 0.62,
                  pig_ha = 1.63,
-                 grazing_ha = 35.28,
-                 weed_ha = 47.42)
+                 weed_ha = 47.42,
+                 grazing_ha = 35.28)
 
 
 # load data -------------------------------------------------------------------
@@ -98,6 +100,13 @@ n <- nrow(pu_table)
 
 pu_table <- cbind(pu_table, vapply(cost_per_ha, rep, numeric(n), n))
 
+cost_table <- setNames(as.data.frame(matrix(0,
+                                            nrow = nrow(pu_table),
+                                            ncol = length(threat_names))),
+                       nm = threat_names)
+
+pu_table <- cbind(pu_table, cost_table)
+
 pu_table$buffalo <- pu_table$pu_area * pu_table$prop_buffalo * pu_table$buffalo_ha
 
 pu_table$pig <- pu_table$pu_area * pu_table$prop_pig *pu_table$pig_ha
@@ -111,11 +120,13 @@ pu_table$weed <- pu_table$pu_area * pu_table$prop_weed * pu_table$weed_ha
 
 # scale relative to species responses
 
-planning_unit <- pu_table[, c("buffalo", "pig", "weed", "grazing")] / 10000
+planning_unit <- pu_table[, threat_names] / 10000
 
 mask <- ifelse(site_threat_array > 0, 1, site_threat_array)
 
 planning_unit <- planning_unit * mask
+
+planning_unit <- as.matrix(planning_unit)
 
 
 # save internal data file -----------------------------------------------------

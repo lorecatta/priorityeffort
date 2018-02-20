@@ -39,26 +39,27 @@ site_species_array <- cbind(fishes@data[, setdiff(names(fishes@data), to_remove)
                             turtles@data[, setdiff(names(turtles@data), to_remove)],
                             birds@data[, setdiff(names(birds@data), to_remove)])
 
+site_species_array <- as.matrix(site_species_array)
+
+
+# create conservation feature array -------------------------------------------
+
+
 sp_names_df <- data.frame(sp_names = colnames(site_species_array),
                           area_of_occ = colSums(site_species_array),
                           target = 0,
                           spf = 0,
                           stringsAsFactors = FALSE)
 
-
-# create conservation feature array -------------------------------------------
-
-
 # remove `mel_sino` and `ARDEO_AU`
 cons_feat_array <- inner_join(sp_names_df, eco_g_lookup)
 
-cons_feat_array <- cons_feat_array[, c("ID",
-                                       "sp_names",
-                                       "area_of_occ",
-                                       "target",
-                                       "spf",
-                                       "FaunalGroup",
-                                       "EcologicalGroup")] # ID first
+# remove some fields
+cons_feat_array <- as.matrix(cons_feat_array[, c("area_of_occ",
+                                                 "target",
+                                                 "spf",
+                                                 "FaunalGroup",
+                                                 "EcologicalGroup")])
 
 
 # save internal data files ----------------------------------------------------
