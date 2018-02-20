@@ -31,7 +31,7 @@ parameters <- list(
   fixed_targets = TRUE,
   occurrence_limits = c(500, 10000),
   target_limits = c(1, 0.1),
-  TargetLevel = c(500, 1000, 1500),               # c(seq(50, 1000, 50), seq(1250, 10000, 250))
+  TargetLevel = c(500, 1000, 1500),# c(seq(50, 1000, 50), seq(1250, 10000, 250))
   print_every_iter = 5)
 
 
