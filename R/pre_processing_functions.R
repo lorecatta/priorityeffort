@@ -334,11 +334,20 @@ cal_norm_upper_bound <- function(best_g, upper_b, confid, possib_lev) {
 
 }
 
-subset_responses <- function(x, wanted_threats) {
+subset_responses <- function(x, original_ids, new_ids) {
 
-  x <- x[x$Threat %in% wanted_threats, ]
-  new_threat_numbering <- c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18))
+  intensity_levels <- length(unique(x$Intensity))
+
+  eco_groups <- length(unique(x$EcologicalGroup))
+
+  times <- intensity_levels * eco_groups
+
+  x <- x[x$Threat %in% original_ids, ]
+
+  new_threat_numbering <- rep(new_ids, each = times)
+
   x$Threat <- new_threat_numbering
+
   x
 
 }
@@ -393,13 +402,6 @@ cap_norm_upper_bound <- function(x) {
   x
 
 }
-
-wrapper_to_get_responses <- function(i) {
-
-  get.responses.to.actions(species_responses, cons_feat_array, estimate = i)
-
-}
-
 
 get.responses.to.actions <- function(species_responses, cons_feat_array, estimate, no.levels = 3) {
 
