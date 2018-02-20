@@ -258,9 +258,151 @@ get.required_actions <- function(site_threat_array_cat, responses_to_actions, co
 }
 
 ###
-# function for creating a list of the values of probability of persistence of each species for each level of effort of each action
+# function for setting targets
 ###
+set_fixed_targets <- function(cons_feat_array, site_species_array, target.level) {
+
+  Target_values <- rep(0, nrow(cons_feat_array))
+
+  # get total area of occupancy for each species
+  tot_occ_area_per_species <- as.numeric(apply(site_species_array,2,sum))
+
+  # get target values for species with area of occupancy smaller than the target
+  occupancy_smaller_than_target <- which(tot_occ_area_per_species <= target.level)
+  Target_values[occupancy_smaller_than_target] <- tot_occ_area_per_species[occupancy_smaller_than_target]
+
+  # get target values for species with area of occupancy larger than the target
+  occupancy_larger_than_target <- which(tot_occ_area_per_species > target.level)
+  Target_values[occupancy_larger_than_target] <- rep(target.level, length(occupancy_larger_than_target))
+
+  # edit input file
+  cons_feat_array[, "target"] <- Target_values
+
+  cons_feat_array
+}
+
+set_scaled_targets <- function(cons_feat_array, occurrence_limits, target_limits) {
+
+  # species targets are linearly scaled to species' area of occupancy
+
+  interp_targ <- function(i, a, b) approx(a, b, xout = i)$y
+
+  cons_feat_array <- cbind(cons_feat_array, target_perc = 0)
+
+  below_lim_1 <- which(cons_feat_array[, "area_of_occ"] < occurrence_limits[1])
+  above_lim_2 <- which(cons_feat_array[, "area_of_occ"] > occurrence_limits[2])
+
+  cons_feat_array[below_lim_1, "target_perc"] <- target_limits[1] * 100
+  cons_feat_array[above_lim_2, "target_perc"] <- target_limits[2] * 100
+
+  cons_feat_array[below_lim_1, "target"] <- round(cons_feat_array[below_lim_1, "area_of_occ"] * target_limits[1],
+                                                  digits = 2)
+  cons_feat_array[above_lim_2, "target"] <- round(cons_feat_array[above_lim_2, "area_of_occ"] * target_limits[2],
+                                                  digits = 2)
+
+  between_lims_ids <- which(cons_feat_array[, "target"] == 0)
+  between_lims <- cons_feat_array[between_lims_ids, ]
+
+  targets <- vapply(between_lims[, "area_of_occ"],
+                    interp_targ,
+                    numeric(1),
+                    a = occurrence_limits,
+                    b = target_limits)
+
+  cons_feat_array[between_lims_ids, "target_perc"] <- targets * 100
+
+  cons_feat_array[between_lims_ids, "target"] <- round(cons_feat_array[between_lims_ids, "area_of_occ"] * targets,
+                                                       digits = 2)
+
+  cbind(ID = seq_len(nrow(cons_feat_array)), cons_feat_array)
+
+}
+
+###
+# functions for pre processing experts' answers
+###
+
+cal_norm_lower_bound <- function(best_g, lower_b, confid, possib_lev) {
+
+  best_g - (best_g - lower_b) * (possib_lev / confid)
+
+}
+
+cal_norm_upper_bound <- function(best_g, upper_b, confid, possib_lev) {
+
+  best_g + (upper_b - best_g) * (possib_lev / confid)
+
+}
+
+subset_responses <- function(x, wanted_threats) {
+
+  x <- x[x$Threat %in% wanted_threats, ]
+  new_threat_numbering <- c(rep(1, 18), rep(2, 18), rep(3, 18), rep(4, 18))
+  x$Threat <- new_threat_numbering
+  x
+
+}
+
+average_responses <- function(responses_ind_experts, vars, base_info, fauna_ex_ind) {
+
+  species_responses <- NULL
+
+  for (i in 1:length(fauna_ex_ind)) {
+
+    out <- matrix(0, nrow = nrow(responses_ind_experts[[1]]), ncol = length(vars))
+
+    colnames(out) <- 1:dim(out)[2]
+    colnames(out) <- vars
+
+    for (j in 1:length(vars)) {
+
+      inds <- fauna_ex_ind[[i]]
+      #cat("indices =", inds, "\n") #debugging
+
+      variable <- vars[j]
+      #cat("variable =", variable, "\n") #debugging
+
+      all_experts_variable_values <- sapply(responses_ind_experts[inds], "[[", variable)
+
+      out[, j] <- rowMeans(all_experts_variable_values)
+
+    }
+
+    out <- cbind(responses_ind_experts[[inds[1]]][, base_info], out)
+
+    species_responses <- rbind(species_responses, out)
+
+  }
+
+  species_responses
+}
+
+cap_norm_lower_bound <- function(x) {
+
+  x$norm_lower <- pmax(cal_norm_lower_bound(x$PP_BestGuess, x$PP_Lower, x$Confidence, 100), 0)
+
+  x
+
+}
+
+
+cap_norm_upper_bound <- function(x) {
+
+  x$norm_upper <- pmin(cal_norm_upper_bound(x$PP_BestGuess, x$PP_Upper, x$Confidence, 100), 1)
+
+  x
+
+}
+
+wrapper_to_get_responses <- function(i) {
+
+  get.responses.to.actions(species_responses, cons_feat_array, estimate = i)
+
+}
+
+
 get.responses.to.actions <- function(species_responses, cons_feat_array, estimate, no.levels = 3) {
+
   #define variables within the function
   no.species <- nrow(cons_feat_array)
   no.threats <- length(unique(species_responses[,"Threat"]))
@@ -322,65 +464,4 @@ get.responses.to.actions <- function(species_responses, cons_feat_array, estimat
   }
 
   out_list
-}
-
-###
-# function for setting targets
-###
-set_fixed_targets <- function(cons_feat_array, site_species_array, target.level) {
-
-  Target_values <- rep(0, nrow(cons_feat_array))
-
-  # get total area of occupancy for each species
-  tot_occ_area_per_species <- as.numeric(apply(site_species_array,2,sum))
-
-  # get target values for species with area of occupancy smaller than the target
-  occupancy_smaller_than_target <- which(tot_occ_area_per_species <= target.level)
-  Target_values[occupancy_smaller_than_target] <- tot_occ_area_per_species[occupancy_smaller_than_target]
-
-  # get target values for species with area of occupancy larger than the target
-  occupancy_larger_than_target <- which(tot_occ_area_per_species > target.level)
-  Target_values[occupancy_larger_than_target] <- rep(target.level, length(occupancy_larger_than_target))
-
-  # edit input file
-  cons_feat_array[, "target"] <- Target_values
-
-  cons_feat_array
-}
-
-set_scaled_targets <- function(cons_feat_array, occurrence_limits, target_limits) {
-
-  # species targets are linearly scaled to species' area of occupancy
-
-  interp_targ <- function(i, a, b) approx(a, b, xout = i)$y
-
-  cons_feat_array <- cbind(cons_feat_array, target_perc = 0)
-
-  below_lim_1 <- which(cons_feat_array[, "area_of_occ"] < occurrence_limits[1])
-  above_lim_2 <- which(cons_feat_array[, "area_of_occ"] > occurrence_limits[2])
-
-  cons_feat_array[below_lim_1, "target_perc"] <- target_limits[1] * 100
-  cons_feat_array[above_lim_2, "target_perc"] <- target_limits[2] * 100
-
-  cons_feat_array[below_lim_1, "target"] <- round(cons_feat_array[below_lim_1, "area_of_occ"] * target_limits[1],
-                                                  digits = 2)
-  cons_feat_array[above_lim_2, "target"] <- round(cons_feat_array[above_lim_2, "area_of_occ"] * target_limits[2],
-                                                  digits = 2)
-
-  between_lims_ids <- which(cons_feat_array[, "target"] == 0)
-  between_lims <- cons_feat_array[between_lims_ids, ]
-
-  targets <- vapply(between_lims[, "area_of_occ"],
-                    interp_targ,
-                    numeric(1),
-                    a = occurrence_limits,
-                    b = target_limits)
-
-  cons_feat_array[between_lims_ids, "target_perc"] <- targets * 100
-
-  cons_feat_array[between_lims_ids, "target"] <- round(cons_feat_array[between_lims_ids, "area_of_occ"] * targets,
-                                                       digits = 2)
-
-  cbind(ID = seq_len(nrow(cons_feat_array)), cons_feat_array)
-
 }
