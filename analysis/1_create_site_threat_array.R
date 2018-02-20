@@ -1,4 +1,10 @@
 
+library(rgdal)
+
+
+# define parameters -----------------------------------------------------------
+
+
 thr_in_pth <- file.path("data_raw", "shapefiles", "threats")
 
 threat_names <- c("Buffalo", "Pig", "Grazing", "Weed")

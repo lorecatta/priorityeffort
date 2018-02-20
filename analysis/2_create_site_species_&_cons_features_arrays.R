@@ -1,12 +1,9 @@
-# load the package
-devtools::load_all()
-
 
 library(rgdal)
 library(dplyr)
 
 
-# define parameter ------------------------------------------------------------
+# define parameters -----------------------------------------------------------
 
 
 spp_in_pth <- file.path("data_raw", "shapefiles", "species")
