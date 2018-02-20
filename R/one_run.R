@@ -9,6 +9,10 @@ wrapper <- function(parms,
 
   fixed_targets <- parms$fixed_targets
 
+  occurrence_limits <- parms$occurrence_limits
+
+  target_limits <- parms$target_limits
+
   if(!fixed_targets){
 
     cons_feat_array <- set_scaled_targets(cons_feat_array,
@@ -84,6 +88,10 @@ one_run <- function(x,
     cons_feat_array <- set_fixed_targets(cons_feat_array, site_species_array, target_level)
 
   }
+
+  spf_values <- parms$spf
+
+  cons_feat_array[, "spf"] <- spf_values
 
   # run the optimization
   run <- Optimize(parms,
