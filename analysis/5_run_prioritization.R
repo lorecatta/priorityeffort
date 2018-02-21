@@ -77,5 +77,6 @@ lapply(solution, plot_effort_map, daly_prj, rivers_prj, outline_prj)
 # save solution ---------------------------------------------------------------
 
 
-devtools::use_data(solution, solution, overwrite = TRUE)
-
+write_out_rds(solution,
+              file.path("output", paste0("exp_", parameters$Exp)),
+              "solution_one_target.rds")
