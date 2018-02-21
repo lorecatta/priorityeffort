@@ -1,4 +1,4 @@
-make_effort_map <- function(solution, catch_shp, river_shp, catch_shp_outline) {
+plot_effort_map <- function(solution, catch_shp, river_shp, catch_shp_outline) {
 
   #browser()
 
@@ -29,24 +29,6 @@ make_effort_map <- function(solution, catch_shp, river_shp, catch_shp_outline) {
   catch_shp@data$grazing <- factor(catch_shp@data$grazing,
                                    levels = c(1, 2, 3),
                                    labels = c("Low", "Medium", "High"))
-
-  # # dissolve subcatchment layer to get region outline
-  # catch_shp_outline <- gUnaryUnion(catch_shp, id = catch_shp@data$OID_)
-  #
-  # # define geographic coordinate system / long,lat
-  # geograhic_CRS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")  # geographical, datum WGS84
-  #
-  # proj4string(catch_shp) <- geograhic_CRS
-  # proj4string(river_shp) <- geograhic_CRS
-  # proj4string(catch_shp_outline) <- geograhic_CRS
-  #
-  # # define projected coordinate system / eastings and northings (GDA94/Australian Albers, EPSG:3577)
-  # # look up http://www.spatialreference.org/
-  # projected_CRS <- CRS('+proj=aea +lat_1=-18 +lat_2=-36 +lat_0=0 +lon_0=132 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  #
-  # catch_shp_proj <- spTransform(catch_shp, projected_CRS)
-  # river_shp_proj <- spTransform(river_shp, projected_CRS)
-  # catch_shp_outline_proj <- spTransform(catch_shp_outline, projected_CRS)
 
   # get coordinates box for helping placing arrow and scale bar later
   bb <- bbox(catch_shp)
