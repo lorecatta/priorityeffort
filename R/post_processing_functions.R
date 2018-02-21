@@ -11,11 +11,11 @@ get_run_diagnostics <- function(solution) {
   # create output
   output <- setNames(rep(0, length(diagnostics)), diagnostics)
 
-  output <- c(solution$cost,
-              solution$species_benefit,
-              solution$species_penalty,
-              solution$OF_value,
-              solution$no_pu)
+  output[] <- c(solution$cost,
+                solution$species_benefit,
+                solution$species_penalty,
+                solution$OF_value,
+                solution$no_pu)
 
   output
 
@@ -31,19 +31,22 @@ moving_index_search <- function(my_data, runs){
 
 }
 
-get_selected_pu_index <- function(x){
+get_selected_pu_index <- function(solution){
 
-  a <- apply(x[[7]], 1, function(y) min(sum(y), 1))
-  b <- which(a == 1)
-  b
+  a <- apply(solution$site_action_array, 1, function(y) min(sum(y), 1))
+
+  which(a == 1)
 
 }
 
-calc_daly_prop_selected <- function(i, sel_pu_ind, area_file, total_area){
+calc_daly_prop_selected <- function(sel_pu_ind, area_file){
 
-  a <- sel_pu_ind[[i]]
-  selected_area <- sum(area_file[a, "Shape_Area"])
-  out <- selected_area / total_area
+  # NOTE: The treated are for buffalo control IS the planning unit area
+  total_area <- sum(area_file[, "buffalo"])
+
+  selected_area <- sum(area_file[sel_pu_ind, "buffalo"])
+
+  selected_area / total_area
 
 }
 
