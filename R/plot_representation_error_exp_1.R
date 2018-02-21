@@ -1,4 +1,4 @@
-bar_plot_representation_error <- function(aa, parms, by_var){
+bar_plot_representation_error <- function(aa, parms){
 
   #browser()
 
