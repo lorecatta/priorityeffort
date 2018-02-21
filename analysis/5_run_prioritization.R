@@ -1,4 +1,6 @@
 
+devtools::load_all()
+
 my_resources <- c(
   file.path("R", "create_exp_design.R"),
   file.path("R", "pre_processing_functions.R"),
@@ -6,10 +8,11 @@ my_resources <- c(
   file.path("R", "calculate_OF.R"),
   file.path("R", "optimize_actions.R"),
   file.path("R", "plot_trackers.R"),
+  file.path("R", "plot_effort_map"),
   file.path("R", "one_run.R"),
   file.path("R", "utility_functions.r"))
 
-my_pkgs <- c("ggplot2", "grid", "gridExtra")
+my_pkgs <- c("ggplot2", "grid", "gridExtra", "dplyr", "rgeos", "RColorBrewer")
 
 root <- "context"
 
@@ -24,14 +27,15 @@ ctx <- context::context_save(path = root,
 
 parameters <- list(
   Exp = 1,
-  Replicates = 1,
-  no_ITER = 100,
+  Replicates = 10,
+  no_ITER = 1000000,
   Temp_zero = 1,
   cooling_factor = 0.99999,
-  fixed_targets = TRUE,
+  fixed_targets = FALSE,
   occurrence_limits = c(500, 10000),
   target_limits = c(1, 0.1),
-  TargetLevel = c(500, 1000, 1500),# c(seq(50, 1000, 50), seq(1250, 10000, 250))
+  TargetLevel = c(seq(50, 1000, 50), seq(1250, 10000, 250)),
+  spf = 10,
   print_every_iter = 5)
 
 
@@ -59,5 +63,19 @@ solution <- wrapper(parms = parameters,
                     species_responses = species_responses,
                     parallel = TRUE)
 
-# plot temperature, cost and species penalty of one solution
-plot_trackers(solution[[2]])
+
+# plot ------------------------------------------------------------------------
+
+
+# temperature, cost and species penalty
+lapply(solution, plot_trackers)
+
+# map of priority effort
+lapply(solution, plot_effort_map, daly_prj, rivers_prj, outline_prj)
+
+
+# save solution ---------------------------------------------------------------
+
+
+devtools::use_data(solution, solution, overwrite = TRUE)
+

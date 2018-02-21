@@ -1,5 +1,5 @@
 
-devtools::load_all()
+devtools::load_all() # need site_threat_array
 
 library(rgdal)
 
@@ -7,18 +7,7 @@ library(rgdal)
 # define parameters -----------------------------------------------------------
 
 
-in_pth <- file.path("data_raw", "shapefiles")
-
 threat_names <- c("buffalo", "pig", "weed", "grazing")
-
-# define geographic coordinate system
-# long,lat geographical, datum WGS84
-geo_CRS <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")
-
-# define projected coordinate system
-# eastings and northings (GDA94/Australian Albers, EPSG:3577)
-# http://www.spatialreference.org/
-prj_CRS <- CRS('+proj=aea +lat_1=-18 +lat_2=-36 +lat_0=0 +lon_0=132 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
 
 # AUS$ per ha
 cost_per_ha <- c(buffalo_ha = 0.62,
@@ -30,22 +19,12 @@ cost_per_ha <- c(buffalo_ha = 0.62,
 # load data -------------------------------------------------------------------
 
 
-daly <- readOGR(dsn = in_pth, layer = "Catch_500")
-
-rivers <- readOGR(dsn = in_pth, layer = "River_500")
-
 para_grass <- readOGR(dsn = file.path("data_raw", "shapefiles", "threats"),
                       layer = "para_grass")
 
 
 # create planning unit array --------------------------------------------------
 
-
-proj4string(daly) <- geo_CRS
-proj4string(rivers) <- geo_CRS
-
-daly_prj <- spTransform(daly, prj_CRS)
-rivers_prj <- spTransform(rivers, prj_CRS)
 
 all_areas <- sapply(daly_prj@polygons, function(x) x@area) # sq meters
 
@@ -100,10 +79,9 @@ n <- nrow(pu_table)
 
 pu_table <- cbind(pu_table, vapply(cost_per_ha, rep, numeric(n), n))
 
-cost_table <- setNames(as.data.frame(matrix(0,
-                                            nrow = nrow(pu_table),
-                                            ncol = length(threat_names))),
-                       nm = threat_names)
+cost_table <- setNames(
+  as.data.frame(matrix(0, nrow = nrow(pu_table), ncol = length(threat_names))),
+  nm = threat_names)
 
 pu_table <- cbind(pu_table, cost_table)
 
@@ -119,11 +97,10 @@ pu_table$weed <- pu_table$pu_area * pu_table$prop_weed * pu_table$weed_ha
 ###
 
 # scale relative to species responses
-
 planning_unit <- pu_table[, threat_names] / 10000
 
+# keep only PUs where the threat occurs
 mask <- ifelse(site_threat_array > 0, 1, site_threat_array)
-
 planning_unit <- planning_unit * mask
 
 planning_unit <- as.matrix(planning_unit)

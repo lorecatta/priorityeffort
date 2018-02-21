@@ -6,7 +6,7 @@ library(dplyr)
 # define parameters -----------------------------------------------------------
 
 
-spp_in_pth <- file.path("data_raw", "shapefiles", "species")
+spp_in_pth <- file.path("data-raw", "shapefiles", "species")
 
 to_remove <- c("OID_",
                "Shape_Leng",

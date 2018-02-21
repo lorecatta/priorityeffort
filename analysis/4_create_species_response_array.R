@@ -1,11 +1,13 @@
 
-devtools::load_all()
+devtools::load_all() # need functions in /R
 
 library(XLConnect)
 
 
 # define parameters -----------------------------------------------------------
 
+
+in_pth <- "data-raw"
 
 variables <- c("PP_BestGuess", "norm_lower", "norm_upper")
 
@@ -17,7 +19,7 @@ fauna_expert_indices <- list(f = 1:5, t = 6:9, b = 10:13)
 # load data -------------------------------------------------------------------
 
 
-responses_wb <- loadWorkbook(file.path("data_raw", "individual_expert_responses.xlsx"))
+responses_wb <- loadWorkbook(file.path(in_pth, "individual_expert_responses.xlsx"))
 
 responses_lst <- readWorksheet(responses_wb, sheet = getSheets(responses_wb))
 
