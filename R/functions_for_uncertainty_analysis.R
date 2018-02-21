@@ -15,7 +15,6 @@ calculate_representation_error <- function(x,
                                            responses_to_actions_EXP,
                                            required_actions,
                                            site_species_array.mat,
-                                           output_folder,
                                            output_by_species) {
 
 
@@ -39,9 +38,9 @@ calculate_representation_error <- function(x,
   no.actions <- ncol(site_threat_array_cat.mat)
 
   # get site action array from the best run for a particular estimate and target level combination
-  selected_sites_and_actions <- all_run_results[[ID_run]][[7]]
+  selected_sites_and_actions <- all_run_results[[ID_run]]$site_action_array
 
-  species_targets <- all_run_results[[ID_run]][[10]]
+  species_targets <- all_run_results[[ID_run]]$targets
   #cat("individual species targets = ", species_targets, "\n") #debugging
 
   # create list for storing EXPECTED response values (best guess)
@@ -118,19 +117,13 @@ calculate_representation_error <- function(x,
 
   if(output_by_species){
 
-    table_name <- sprintf("errors_by_species_exp_%s_run_%s_%s%s", ID_exp, ID_run, OBS_response_tag, ".rds")
+    table_name <- sprintf("errors_by_species_run_%s%s", ID_run, ".rds")
 
-    dir.create(file.path("output", paste("output_exp", ID_exp, sep = "_"),
+    out_pth <- file.path("output", paste("exp", ID_exp, sep = "_"),
                          "uncertainty_analysis",
-                         output_folder,
-                         OBS_response_tag),
-               FALSE, TRUE)
+                         OBS_response_tag)
 
-    saveRDS(species_error_table, file.path("output", paste("output_exp", ID_exp, sep = "_"),
-                                           "uncertainty_analysis",
-                                           output_folder,
-                                           OBS_response_tag,
-                                           table_name))
+    write_out_rds(species_error_table, out_pth, table_name)
 
   }
 
