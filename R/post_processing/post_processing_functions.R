@@ -1,23 +1,21 @@
-get_run_diagnostics <- function(j, all_run_results) {
+get_run_diagnostics <- function(solution) {
 
   #cat("run =", j, "\n") #debugging
 
   diagnostics <- c("cost",
                    "species_benefit",
                    "species_penalty",
-                   "conn_penalty",
                    "OF",
                    "planning_units")
 
   # create output
   output <- setNames(rep(0, length(diagnostics)), diagnostics)
 
-  output["cost"] <- all_run_results[[j]][[2]]
-  output["species_benefit"] <- all_run_results[[j]][[3]]
-  output["species_penalty"] <- all_run_results[[j]][[4]]
-  output["conn_penalty"] <- all_run_results[[j]][[5]]
-  output["OF"] <- all_run_results[[j]][[6]]
-  output["planning_units"] <- all_run_results[[j]][[9]]
+  output <- c(solution$cost,
+              solution$species_benefit,
+              solution$species_penalty,
+              solution$OF_value,
+              solution$no_pu)
 
   output
 
