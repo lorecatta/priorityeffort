@@ -1,7 +1,7 @@
 bar_plot_species_proportions <- function(aa, parms){
 
-  my_labs <- as_labeller(c(`Species below target` = "Below target",
-                           `Species above target` = "Above target"))
+  my_labs <- as_labeller(c(`below target` = "Below target",
+                           `above target` = "Above target"))
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))
 
@@ -17,7 +17,7 @@ bar_plot_species_proportions <- function(aa, parms){
 
   p <- ggplot(aa, aes(x = response_type, y = value)) +
     geom_bar(stat = "identity", width = 0.5) +
-    facet_wrap(~ species_prop, ncol = 3, labeller = labeller(species_prop = my_labs)) +
+    facet_wrap(~ prop, ncol = 3, labeller = labeller(prop = my_labs)) +
     scale_x_discrete("", labels = c("Best guess", "Lower bound", "Upper bound")) +
     scale_y_continuous("Proportion of species",
                        limits = c(0, 1),
