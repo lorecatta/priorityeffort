@@ -79,4 +79,4 @@ lapply(solution, plot_effort_map, daly_prj, rivers_prj, outline_prj)
 
 write_out_rds(solution,
               file.path("output", paste0("exp_", parameters$Exp)),
-              "solution_one_target.rds")
+              "solution.rds")
