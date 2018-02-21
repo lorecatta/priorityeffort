@@ -119,13 +119,11 @@ data_to_plot$response_type <- factor(data_to_plot$response_type,
 data_to_plot_long <- melt(data_to_plot,
                           id.vars = "response_type",
                           measure.vars = c("prop_below", "prop_above", "prop_at"),
-                          variable.name = "species_prop")
+                          variable.name = "prop")
 
-levels(data_to_plot_long$species_prop) <- c("Species below target",
-                                            "Species above target",
-                                            "Species at target")
+levels(data_to_plot_long$prop) <- c("below target", "above target", "at target")
 
-data_to_plot_long <- data_to_plot_long[!data_to_plot_long$species_prop == "Species at target", ]
+data_to_plot_long <- data_to_plot_long[!data_to_plot_long$prop == "at target", ]
 
 bar_plot_species_proportions(data_to_plot_long, parameters)
 
