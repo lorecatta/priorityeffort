@@ -143,5 +143,4 @@ data_to_plot_long_2$time <- factor(data_to_plot_long_2$time,
                                    levels = c("neg", "pos"),
                                    labels = c("Below target", "Above target"))
 
-
 bar_plot_change_from_target(data_to_plot_long_2, parameters)
