@@ -12,6 +12,7 @@ thr_in_pth <- file.path("data-raw", "shapefiles", "threats")
 threat_names <- c("buffalo", "pig", "weed", "grazing")
 
 # AUS$ per ha
+# order is important
 cost_per_ha <- c(buffalo_ha = 0.62,
                  pig_ha = 1.63,
                  weed_ha = 47.42,
@@ -29,12 +30,17 @@ para_grass <- readOGR(dsn = thr_in_pth, layer = "para_grass")
 
 all_areas <- sapply(daly_prj@polygons, function(x) x@area) # sq meters
 
+all_areas_ha <- all_areas / 10000 # from sq m to hectars
+
 all_lenghts <- sp::SpatialLinesLengths(rivers_prj, longlat = FALSE) # meters
 
-pu_table <- data.frame(pu_id = seq_len(nrow(daly_prj@data)),
-                       pu_area = all_areas / 10000, # from sq m to hectars
-                       river_l = all_lenghts,
-                       river_a = (all_lenghts * 100) / 10000)
+# order is important
+pu_table <- cbind(all_areas_ha,
+                  all_areas_ha,
+                  all_areas_ha,
+                  (all_lenghts * 100) / 10000)
+
+colnames(pu_table) <- threat_names
 
 
 ###
@@ -48,10 +54,12 @@ pu_table <- data.frame(pu_id = seq_len(nrow(daly_prj@data)),
 # Corresponding proportions of para grass cover: 0, <10%, 10-50%, >50%
 # For each proportion, I consider the mean of the range
 
-pu_table$prop_buffalo <- 1
-pu_table$prop_pig <- 1
-pu_table$prop_grazing <- 1
-pu_table$prop_weed <- 0
+n <- nrow(pu_table)
+
+# order is important
+threat_prop <- cbind(rep(1, n), rep(1, n), rep(0, n), rep(1, n))
+
+colnames(threat_prop) <- threat_names
 
 weed_incidence <- para_grass@data
 
@@ -61,13 +69,13 @@ for (i in 1:nrow(pu_table)) {
 
   if(incidence_class == 1) {
 
-    pu_table[i, "prop_weed"] <- 0.05
+    threat_prop[i, "weed"] <- 0.05
 
   }
 
   if(incidence_class == 2) {
 
-    pu_table[i, "prop_weed"] <- 0.3
+    threat_prop[i, "weed"] <- 0.3
 
   }
 
@@ -76,38 +84,25 @@ for (i in 1:nrow(pu_table)) {
 ###
 
 
-n <- nrow(pu_table)
+treated_area <- pu_table * threat_prop
 
-pu_table <- cbind(pu_table, vapply(cost_per_ha, rep, numeric(n), n))
+cost_ha <- vapply(cost_per_ha, rep, numeric(n), n)
 
-cost_table <- setNames(
-  as.data.frame(matrix(0, nrow = nrow(pu_table), ncol = length(threat_names))),
-  nm = threat_names)
-
-pu_table <- cbind(pu_table, cost_table)
-
-pu_table$buffalo <- pu_table$pu_area * pu_table$prop_buffalo * pu_table$buffalo_ha
-
-pu_table$pig <- pu_table$pu_area * pu_table$prop_pig *pu_table$pig_ha
-
-pu_table$grazing <- pu_table$river_a * pu_table$prop_grazing * pu_table$grazing_ha
-
-pu_table$weed <- pu_table$pu_area * pu_table$prop_weed * pu_table$weed_ha
-
+costs <- treated_area * cost_ha
 
 ###
 
 # scale relative to species responses
-planning_unit <- pu_table[, threat_names] / 10000
+planning_unit <- costs[, threat_names] / 10000
 
 # keep only PUs where the threat occurs
 mask <- ifelse(site_threat_array > 0, 1, site_threat_array)
 planning_unit <- planning_unit * mask
 
-planning_unit <- as.matrix(planning_unit)
 
-
-# save internal data file -----------------------------------------------------
+# save internal data files ----------------------------------------------------
 
 
 devtools::use_data(planning_unit, planning_unit, overwrite = TRUE)
+
+devtools::use_data(treated_area, treated_area, overwrite = TRUE)
