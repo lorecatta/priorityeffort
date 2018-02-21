@@ -7,6 +7,8 @@ library(rgdal)
 # define parameters -----------------------------------------------------------
 
 
+thr_in_pth <- file.path("data-raw", "shapefiles", "threats")
+
 threat_names <- c("buffalo", "pig", "weed", "grazing")
 
 # AUS$ per ha
@@ -19,8 +21,7 @@ cost_per_ha <- c(buffalo_ha = 0.62,
 # load data -------------------------------------------------------------------
 
 
-para_grass <- readOGR(dsn = file.path("data_raw", "shapefiles", "threats"),
-                      layer = "para_grass")
+para_grass <- readOGR(dsn = thr_in_pth, layer = "para_grass")
 
 
 # create planning unit array --------------------------------------------------
