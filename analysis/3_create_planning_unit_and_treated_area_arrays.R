@@ -18,6 +18,8 @@ cost_per_ha <- c(buffalo_ha = 0.62,
                  weed_ha = 47.42,
                  grazing_ha = 35.28)
 
+cost_scale_factor <- 10000
+
 
 # load data -------------------------------------------------------------------
 
@@ -93,7 +95,7 @@ costs <- treated_area * cost_ha
 ###
 
 # scale relative to species responses
-planning_unit <- costs[, threat_names] / 10000
+planning_unit <- costs[, threat_names] / cost_scale_factor
 
 # keep only PUs where the threat occurs
 mask <- ifelse(site_threat_array > 0, 1, site_threat_array)
