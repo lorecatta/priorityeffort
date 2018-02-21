@@ -11,23 +11,34 @@ loop_simplify <- function(..., what) {
 }
 
 write_out_rds <- function(dat, my_path, file_name) {
-  
+
   dir.create(my_path, FALSE, TRUE)
-  
+
   saveRDS(dat, file.path(my_path, file_name))
-  
+
 }
 
 write_out_csv <- function(dat, my_path, file_name) {
-  
+
   dir.create(my_path, FALSE, TRUE)
-  
+
+  write.csv(
+    dat,
+    file.path(my_path, file_name),
+    row.names = FALSE)
+
+}
+
+write_out_txt <- function(dat, my_path, file_name) {
+
+  dir.create(my_path, FALSE, TRUE)
+
   write.table(
-    dat, 
-    file.path(my_path, file_name), 
-    row.names = FALSE, 
+    dat,
+    file.path(my_path, file_name),
+    row.names = FALSE,
     sep = ",")
-  
+
 }
 
 df_to_list <- function (x, use_names) {
