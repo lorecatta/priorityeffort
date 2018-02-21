@@ -31,7 +31,7 @@ rivers <- readOGR(dsn = in_pth, layer = "River_500")
 
 outline <- gUnaryUnion(daly, id = daly@data$OID_)
 
-outline <- as(outline, "SpatialPolygonsDataFrame")
+daly_outline <- as(outline, "SpatialPolygonsDataFrame")
 
 
 # project shp files -----------------------------------------------------------
@@ -41,22 +41,22 @@ proj4string(daly) <- geo_CRS
 
 proj4string(rivers) <- geo_CRS
 
-proj4string(outline) <- geo_CRS
+proj4string(daly_outline) <- geo_CRS
 
 daly_prj <- spTransform(daly, prj_CRS)
 
 rivers_prj <- spTransform(rivers, prj_CRS)
 
-outline_prj <- spTransform(outline, prj_CRS)
+daly_outline_prj <- spTransform(daly_outline, prj_CRS)
 
 
 # save shapefiles -------------------------------------------------------------
 
 
-writeOGR(daly_prj, "data", "daly_prj", driver = "ESRI Shapefile")
+devtools::use_data(daly_prj, daly_prj, overwrite = TRUE)
 
-writeOGR(rivers_prj, "data", "rivers_prj", driver = "ESRI Shapefile")
+devtools::use_data(rivers_prj, rivers_prj, overwrite = TRUE)
 
-writeOGR(outline, "data", "outline", driver = "ESRI Shapefile")
+devtools::use_data(daly_outline, daly_outline, overwrite = TRUE)
 
-writeOGR(outline_prj, "data", "outline_prj", driver = "ESRI Shapefile")
+devtools::use_data(daly_outline_prj, daly_outline_prj, overwrite = TRUE)
