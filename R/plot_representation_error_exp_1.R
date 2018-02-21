@@ -6,7 +6,7 @@ bar_plot_representation_error <- function(aa, parms, by_var){
 
   dir.create(out_pth, FALSE, TRUE)
 
-  plot.file.name <- sprintf("Representation_error_exp_%s%s", parms$Exp, ".png")
+  plot.file.name <- "Representation_error.png"
 
   #se_values <- aa$se_mean_perc_change
   y_values <- pretty(aa$mean_perc_change, n = 10)
