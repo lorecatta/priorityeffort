@@ -58,6 +58,8 @@ get_cost_breakdown <- function(site_action_array,
   no.sites <- nrow(site_action_array)
   no.threats <- ncol(site_action_array)
 
+  no_years <- 20
+
   actions <- c("Aerial shooting of buffalos",
                "Aerial shooting of pigs",
                "Riparian fencing",
@@ -65,11 +67,14 @@ get_cost_breakdown <- function(site_action_array,
 
   levels_of_effort <- c("Low", "Medium", "High")
 
-  diagnostics <- c("cost_per_year", "20y_cost", "threat_extent", "treated_area", "selected_PU", "treated_area_per_PU")
+  diagnostics <- c("annual_cost",
+                   "20y_cost",
+                   "treated_area")
 
   output <- expand.grid(actions, levels_of_effort)
 
-  output <- cbind(output, matrix(rep(0, length(diagnostics) * nrow(output)), ncol = length(diagnostics)))
+  output <- cbind(output, matrix(rep(0, length(diagnostics) * nrow(output)),
+                                 ncol = length(diagnostics)))
 
   names(output) <- c("Action", "Level", diagnostics)
 
@@ -162,17 +167,30 @@ get_cost_breakdown <- function(site_action_array,
     }
   }
 
-  output[output$Action == "Aerial shooting of buffalos", "cost_per_year"] <- c(buffalo_cost_low, buffalo_cost_medium, buffalo_cost_high)
-  output[output$Action == "Aerial shooting of pigs", "cost_per_year"] <- c(pig_cost_low, pig_cost_medium, pig_cost_high)
-  output[output$Action == "Riparian fencing", "cost_per_year"] <- c(grazing_cost_low, grazing_cost_medium, grazing_cost_high)
-  output[output$Action == "Chemical spraying", "cost_per_year"] <- c(weed_cost_low, weed_cost_medium, weed_cost_high)
+  output[output$Action == "Aerial shooting of buffalos", "annual_cost"] <- c(buffalo_cost_low,
+                                                                             buffalo_cost_medium,
+                                                                             buffalo_cost_high)
 
-  output[output$Action == "Aerial shooting of buffalos", "20y_cost"] <- output[output$Action == "Aerial shooting of buffalos", "cost_per_year"] * 20
-  output[output$Action == "Aerial shooting of pigs", "20y_cost"] <- output[output$Action == "Aerial shooting of pigs", "cost_per_year"] * 20
-  output[output$Action == "Riparian fencing", "20y_cost"] <- output[output$Action == "Riparian fencing", "cost_per_year"] * 20
-  output[output$Action == "Chemical spraying", "20y_cost"] <- output[output$Action == "Chemical spraying", "cost_per_year"] * 20
+  output[output$Action == "Aerial shooting of pigs", "annual_cost"] <- c(pig_cost_low,
+                                                                         pig_cost_medium,
+                                                                         pig_cost_high)
+
+  output[output$Action == "Riparian fencing", "annual_cost"] <- c(grazing_cost_low,
+                                                                  grazing_cost_medium,
+                                                                  grazing_cost_high)
+
+  output[output$Action == "Chemical spraying", "annual_cost"] <- c(weed_cost_low,
+                                                                   weed_cost_medium,
+                                                                   weed_cost_high)
+
+  output[output$Action == "Aerial shooting of buffalos", "20y_cost"] <- output[output$Action == "Aerial shooting of buffalos", "annual_cost"] * no_years
+  output[output$Action == "Aerial shooting of pigs", "20y_cost"] <- output[output$Action == "Aerial shooting of pigs", "annual_cost"] * no_years
+  output[output$Action == "Riparian fencing", "20y_cost"] <- output[output$Action == "Riparian fencing", "annual_cost"] * no_years
+  output[output$Action == "Chemical spraying", "20y_cost"] <- output[output$Action == "Chemical spraying", "annual_cost"] * no_years
+
 
   # ----------------------------- same but for extent of treatment ---------------------------------
+
 
   prop_treated_area_low_buffalo <- 0
   all_treated_area_low_buffalo <- 0
@@ -202,21 +220,21 @@ get_cost_breakdown <- function(site_action_array,
   prop_treated_area_high_weed <- 0
   all_treated_area_high_weed <- 0
 
-  pu_selected_low_buffalo <- length(which(site_action_array[, "Buffalo"] == 1))
-  pu_selected_medium_buffalo <- length(which(site_action_array[, "Buffalo"] == 2))
-  pu_selected_high_buffalo <- length(which(site_action_array[, "Buffalo"] == 3))
+  pu_selected_low_buffalo <- length(which(site_action_array[, "buffalo"] == 1))
+  pu_selected_medium_buffalo <- length(which(site_action_array[, "buffalo"] == 2))
+  pu_selected_high_buffalo <- length(which(site_action_array[, "buffalo"] == 3))
 
-  pu_selected_low_pig <- length(which(site_action_array[, "Pig"] == 1))
-  pu_selected_medium_pig <- length(which(site_action_array[, "Pig"] == 2))
-  pu_selected_high_pig <- length(which(site_action_array[, "Pig"] == 3))
+  pu_selected_low_pig <- length(which(site_action_array[, "pig"] == 1))
+  pu_selected_medium_pig <- length(which(site_action_array[, "pig"] == 2))
+  pu_selected_high_pig <- length(which(site_action_array[, "pig"] == 3))
 
-  pu_selected_low_grazing <- length(which(site_action_array[, "Grazing"] == 1))
-  pu_selected_medium_grazing <- length(which(site_action_array[, "Grazing"] == 2))
-  pu_selected_high_grazing <- length(which(site_action_array[, "Grazing"] == 3))
+  pu_selected_low_grazing <- length(which(site_action_array[, "grazing"] == 1))
+  pu_selected_medium_grazing <- length(which(site_action_array[, "grazing"] == 2))
+  pu_selected_high_grazing <- length(which(site_action_array[, "grazing"] == 3))
 
-  pu_selected_low_weed <- length(which(site_action_array[, "Weed"] == 1))
-  pu_selected_medium_weed <- length(which(site_action_array[, "Weed"] == 2))
-  pu_selected_high_weed <- length(which(site_action_array[, "Weed"] == 3))
+  pu_selected_low_weed <- length(which(site_action_array[, "weed"] == 1))
+  pu_selected_medium_weed <- length(which(site_action_array[, "weed"] == 2))
+  pu_selected_high_weed <- length(which(site_action_array[, "weed"] == 3))
 
   for (i in 1:no.sites)
   {
@@ -232,7 +250,7 @@ get_cost_breakdown <- function(site_action_array,
 
       if(j == 1)
       {
-        treated_area_value <- treated_area_file[i, "Buffalo_treated_area"]
+        treated_area_value <- treated_area_file[i, "buffalo"]
         if(action_intensity == 1)
         {
           prop_treated_area_low_buffalo <- prop_treated_area_low_buffalo + (treated_area_value * action_intensity_scaling_factor)
@@ -251,7 +269,7 @@ get_cost_breakdown <- function(site_action_array,
       }
       if(j == 2)
       {
-        treated_area_value <- treated_area_file[i, "Pig_treated_area"]
+        treated_area_value <- treated_area_file[i, "pig"]
         if(action_intensity == 1)
         {
           prop_treated_area_low_pig <- prop_treated_area_low_pig + (treated_area_value * action_intensity_scaling_factor)
@@ -270,7 +288,7 @@ get_cost_breakdown <- function(site_action_array,
       }
       if(j == 3)
       {
-        treated_area_value <- treated_area_file[i, "Grazing_treated_area"]
+        treated_area_value <- treated_area_file[i, "grazing"]
         if(action_intensity == 1)
         {
           prop_treated_area_low_grazing <- prop_treated_area_low_grazing + (treated_area_value * action_intensity_scaling_factor)
@@ -289,7 +307,7 @@ get_cost_breakdown <- function(site_action_array,
       }
       if(j == 4)
       {
-        treated_area_value <- treated_area_file[i, "Weed_treated_area"]
+        treated_area_value <- treated_area_file[i, "weed"]
         if(action_intensity == 1)
         {
           prop_treated_area_low_weed <- prop_treated_area_low_weed + (treated_area_value * action_intensity_scaling_factor)
@@ -306,22 +324,8 @@ get_cost_breakdown <- function(site_action_array,
           all_treated_area_high_weed <- all_treated_area_high_weed + treated_area_value
         }
       }
-      #cat("buffalo_area_high_2 = ", buffalo_area_high_2, "\n") #debugging
     }
   }
-
-  output[output$Action == "Aerial shooting of buffalos", "threat_extent"] <- c(all_treated_area_low_buffalo,
-                                                                               all_treated_area_medium_buffalo,
-                                                                               all_treated_area_high_buffalo)
-  output[output$Action == "Aerial shooting of pigs", "threat_extent"] <- c(all_treated_area_low_pig,
-                                                                           all_treated_area_medium_pig,
-                                                                           all_treated_area_high_pig)
-  output[output$Action == "Riparian fencing", "threat_extent"] <- c(all_treated_area_low_grazing,
-                                                                    all_treated_area_medium_grazing,
-                                                                    all_treated_area_high_grazing)
-  output[output$Action == "Chemical spraying", "threat_extent"] <- c(all_treated_area_low_weed,
-                                                                     all_treated_area_medium_weed,
-                                                                     all_treated_area_high_weed)
 
   output[output$Action == "Aerial shooting of buffalos", "treated_area"] <- c(prop_treated_area_low_buffalo,
                                                                               prop_treated_area_medium_buffalo,
@@ -336,33 +340,6 @@ get_cost_breakdown <- function(site_action_array,
                                                                     prop_treated_area_medium_weed,
                                                                     prop_treated_area_high_weed)
 
-  output[output$Action == "Aerial shooting of buffalos", "selected_PU"] <- c(pu_selected_low_buffalo,
-                                                                             pu_selected_medium_buffalo,
-                                                                             pu_selected_high_buffalo)
-  output[output$Action == "Aerial shooting of pigs", "selected_PU"] <- c(pu_selected_low_pig,
-                                                                         pu_selected_medium_pig,
-                                                                         pu_selected_high_pig)
-  output[output$Action == "Riparian fencing", "selected_PU"] <- c(pu_selected_low_grazing,
-                                                                  pu_selected_medium_grazing,
-                                                                  pu_selected_high_grazing)
-  output[output$Action == "Chemical spraying", "selected_PU"] <- c(pu_selected_low_weed,
-                                                                   pu_selected_medium_weed,
-                                                                   pu_selected_high_weed)
+  output[order(output$Action),]
 
-  output[output$Action == "Aerial shooting of buffalos", "treated_area_per_PU"] <- c(prop_treated_area_low_buffalo / pu_selected_low_buffalo,
-                                                                                     prop_treated_area_medium_buffalo / pu_selected_medium_buffalo,
-                                                                                     prop_treated_area_high_buffalo / pu_selected_high_buffalo)
-  output[output$Action == "Aerial shooting of pigs", "treated_area_per_PU"] <- c(prop_treated_area_low_pig / pu_selected_low_pig,
-                                                                                 prop_treated_area_medium_pig / pu_selected_medium_pig,
-                                                                                 prop_treated_area_high_pig / pu_selected_high_pig)
-  output[output$Action == "Riparian fencing", "treated_area_per_PU"] <- c(prop_treated_area_low_grazing / pu_selected_low_grazing,
-                                                                          prop_treated_area_medium_grazing / pu_selected_medium_grazing,
-                                                                          prop_treated_area_high_grazing / pu_selected_high_grazing)
-  output[output$Action == "Chemical spraying", "treated_area_per_PU"] <- c(prop_treated_area_low_weed / pu_selected_low_weed,
-                                                                           prop_treated_area_medium_weed / pu_selected_medium_weed,
-                                                                           prop_treated_area_high_weed / pu_selected_high_weed)
-
-  output$treated_area_per_PU[is.na(output$treated_area_per_PU)] <- 0
-
-  output <- output[order(output$Action),]
 }
