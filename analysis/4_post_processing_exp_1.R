@@ -173,6 +173,6 @@ vpa_ <- viewport(width = 0.25, height = 0.25, x = 0.84, y = 0.8)  # the inset in
 
 print(b, vp = vpb_)
 print(a, vp = vpa_)
-north2(ggp = b, x = 0.16, y = 0.64, scale = 0.07, symbol = 12)
+north2(ggp = b, x = 0.175, y = 0.64, scale = 0.07, symbol = 12)
 
 dev.off()
