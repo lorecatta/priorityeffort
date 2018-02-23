@@ -129,9 +129,10 @@ b <- ggplot() +
                                          keyheight = 1.5)) +
   theme_bw() +
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
+        axis.title.x = element_text(margin = margin(t = 10)),
         legend.position = "right",
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 11),
+        legend.title = element_text(size = 11),
         strip.text = element_text(size = 9)) +
   scalebar(data = daly_fort_long,
            location = "bottomleft",
