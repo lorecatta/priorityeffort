@@ -27,7 +27,7 @@ bar_plot_representation_error <- function(aa, parms){
                                                  "Lower bound",
                                                  "Upper bound")) +
     scale_y_continuous("Change in species representation") +
-    theme(axis.text.x = element_text(size = 8,angle = 0, vjust = 1, hjust = 0.5),
+    theme(axis.text.x = element_text(size = 8, angle = 0, vjust = 1, hjust = 0.5),
           axis.title.x = element_text(vjust = 0.5, margin = margin(t = 10)),
           axis.title.y = element_text(vjust = 0.5),
           plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"))

@@ -1,4 +1,4 @@
-plot_change_from_target <- function(){
+plot_change_from_target <- function(aa, parms){
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))
 
@@ -12,33 +12,24 @@ plot_change_from_target <- function(){
       units = "cm",
       res = 300)
 
-  neg <- ggplot(data_to_plot_long_2[data_to_plot_long_2$time=="Below target",]) +
+  p <- ggplot(aa) +
     aes(x = target_level, y = Msf, colour = response_type) +
     geom_point(size = 1) +
     geom_errorbar(aes(ymin = Msf - SEsf, ymax = Msf + SEsf),
                   width = .15) +
-    facet_wrap(~ time) +
-    scale_x_continuous() +
-    scale_y_continuous("% change from target",
-                       limits = c(-28, 0),
-                       breaks = seq(-25, 0, 5)) +
-    theme(axis.title.x = element_text(vjust = 0.5),
-          axis.title.y = element_text(vjust = 0.5))
-
-  pos <- ggplot(data_to_plot_long_2[data_to_plot_long_2$time=="Above target",]) +
-    aes(x = target_level, y = Msf, colour = response_type) +
-    geom_point(size = 1) +
-    geom_errorbar(aes(ymin = Msf - SEsf, ymax = Msf + SEsf),
-                  width = .15) +
-    facet_wrap(~ time) +
-    scale_x_continuous() +
-    scale_y_continuous("% change from target",
-                       limits = c(0, 1300),
-                       breaks = seq(0, 1200, 200)) +
-    theme(axis.title.x = element_text(vjust = 0.5),
-          axis.title.y = element_text(vjust = 0.5))
-
-  p <- gridExtra::grid.arrange(neg, pos, ncol=2)
+    facet_wrap(~ time, scales = "free", nrow = 2) +
+    labs(colour = "True response") +
+    scale_x_continuous("Target level") +
+    scale_y_continuous("% change from target") +
+    theme(axis.text = element_text(size = 7),
+          axis.title.x = element_text(size = 8),
+          axis.title.y = element_text(size = 8),
+          plot.margin = unit(c(0.2, 0.1, 0.2, 0.2), "cm"),
+          legend.key.size = unit(0.3, "cm"),
+          legend.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
+          legend.title = element_text(size = 8),
+          legend.text = element_text(size = 6),
+          strip.text = element_text(size = 8))
 
   print(p)
 
