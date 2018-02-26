@@ -95,7 +95,8 @@ all_errors <- do.call("rbind", all_errors)
 data_to_plot <- cbind(factor_combs_df, all_errors)
 
 data_to_plot$response_type <- factor(data_to_plot$response_type,
-                                     labels = response_types)
+                                     levels = c(1, 2, 3),
+                                     labels = c("Best guess", "Lower bound", "Upper bound"))
 
 plot_representation_error(aa = data_to_plot,
                           parms = parameters,
@@ -133,10 +134,4 @@ data_to_plot_long_2$time <- factor(data_to_plot_long_2$time,
                                    levels = c("neg", "pos"),
                                    labels = c("Below target", "Above target"))
 
-data_to_plot_long_2$response_type <- factor(data_to_plot_long_2$response_type,
-                                            levels = c("best_guess", "lower_bound", "upper_bound"),
-                                            labels = c("Best guess", "Lower bound", "Upper bound"))
-
-
 plot_change_from_target(data_to_plot_long_2, parameters)
-

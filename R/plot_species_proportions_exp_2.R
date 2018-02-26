@@ -7,8 +7,8 @@ plot_species_proportions <- function(aa, parms, analysis, by_var){
   plot.file.name <- "Prop_species_above_below_on_target.png"
 
   png(file.path(out_pth, plot.file.name),
-      width = 8,
-      height = 8,
+      width = 14,
+      height = 12,
       units = "cm",
       res = 300)
 
@@ -23,15 +23,14 @@ plot_species_proportions <- function(aa, parms, analysis, by_var){
     scale_y_continuous("Proportion of species",
                        limits = c(0, 1),
                        breaks = seq(0, 1, 0.2)) +
-    theme(axis.text = element_text(size = 7),
-          axis.title.x = element_text(size = 8),
-          axis.title.y = element_text(size = 8),
+    theme(axis.text = element_text(size = 10),
+          axis.title.x = element_text(size = 11),
+          axis.title.y = element_text(size = 11),
           plot.margin = unit(c(0.2, 0.1, 0.2, 0.2), "cm"),
-          legend.key.size = unit(0.3, "cm"),
+          legend.key.size = unit(0.5, "cm"),
           legend.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
-          legend.title = element_text(size = 8),
-          legend.text = element_text(size = 6),
-          strip.text = element_text(size = 8))
+          legend.title = element_text(size = 10),
+          legend.text = element_text(size = 8))
 
   print(p)
 

@@ -13,8 +13,8 @@ plot_representation_error <- function(aa, parms, analysis, by_var){
   x_values <- pretty(aa$target_level, n = 10)
 
   png(file.path(out_pth, plot.file.name),
-      width = 8,
-      height = 7,
+      width = 14,
+      height = 8,
       units = "cm",
       res = 300)
 
@@ -32,14 +32,14 @@ plot_representation_error <- function(aa, parms, analysis, by_var){
     scale_y_continuous("Change in species representation",
                        limits = c(min(y_values), max(y_values)),
                        breaks = y_values) +
-    theme(axis.text = element_text(size = 7),
-          axis.title.x = element_text(size = 8),
-          axis.title.y = element_text(size = 8),
+    theme(axis.text = element_text(size = 10),
+          axis.title.x = element_text(size = 11),
+          axis.title.y = element_text(size = 11),
           plot.margin = unit(c(0.2, 0.1, 0.2, 0.2), "cm"),
-          legend.key.size = unit(0.3, "cm"),
+          legend.key.size = unit(0.5, "cm"),
           legend.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
-          legend.title = element_text(size = 8),
-          legend.text = element_text(size = 6))
+          legend.title = element_text(size = 10),
+          legend.text = element_text(size = 8))
 
   print(p)
 
