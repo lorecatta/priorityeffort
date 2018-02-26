@@ -8,9 +8,9 @@ my_resources <- c(
   file.path("R", "calculate_OF.R"),
   file.path("R", "optimize_actions.R"),
   file.path("R", "plot_trackers.R"),
-  file.path("R", "plot_effort_map"),
+  file.path("R", "plot_effort_map.R"),
   file.path("R", "one_run.R"),
-  file.path("R", "utility_functions.r"))
+  file.path("R", "utility_functions.R"))
 
 my_pkgs <- c("ggplot2", "grid", "gridExtra", "dplyr", "rgeos", "RColorBrewer")
 
