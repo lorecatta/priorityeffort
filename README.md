@@ -8,11 +8,13 @@ This package contains the data and R code to perform prioritization of conservat
 
 Please contact l.cattarino@imperial.ac.uk or pull a request on this github project if you have any queries.
 
-# Installation
+## Installation
 ```r
 install.packages("devtools")
 devtools::install_github("LorenzoCattarino/priorityeffort")
 ```
+
+## Description
 
 The `analysis` directory contains the script for running two prioritization experiments described in the article:
 * Species targets are linearly scaled to each species' area of occupancy (Experiment 1)
