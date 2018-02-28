@@ -13,3 +13,9 @@ Please contact l.cattarino@imperial.ac.uk or pull a request on this github proje
 install.packages("devtools")
 devtools::install_github("LorenzoCattarino/priorityeffort")
 ```
+
+The `analysis` directory contains the script for running two prioritization experiments described in the article:
+* Species targets are linearly scaled to each species' area of occupancy (Experiment 1)
+* Species targets are the same for each species and the actual target value is varied (Experiment 2) 
+
+The `analysis` directory contains also the scripts for post-processing the experiment results and generating the figures shown in the article and in the supporting information. Post-processinf scripts assumed that you had previosuly run the simulation experiments yourself, as experiments results have not been made available in this repository, due to file size limits. 
