@@ -172,7 +172,7 @@ vpb_ <- viewport(width = 1, height = 1, x = 0.5, y = 0.5)  # the larger map
 vpa_ <- viewport(width = 0.25, height = 0.25, x = 0.84, y = 0.8)  # the inset in upper right
 
 print(b, vp = vpb_)
-print(a, vp = vpa_)
 north2(ggp = b, x = 0.175, y = 0.64, scale = 0.07, symbol = 12)
+print(a, vp = vpa_)
 
 dev.off()
