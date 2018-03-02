@@ -12,7 +12,7 @@ my_resources <- c(
   file.path("R", "one_run.R"),
   file.path("R", "utility_functions.R"))
 
-my_pkgs <- c("ggplot2", "sp", "grid", "gridExtra", "dplyr", "rgeos", "RColorBrewer")
+my_pkgs <- c("ggplot2", "grid", "gridExtra", "dplyr", "rgeos", "RColorBrewer")
 
 root <- "context"
 
