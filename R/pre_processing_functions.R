@@ -1,6 +1,11 @@
-###
-# function for creating a matrix of the category (0,1,2,3) of threat intensity in each site
-###
+#' Create threat intensity category array.
+#'
+#' Create a matrix of the category of magnitute (0, 1, 2 or 3) for each threat in each site.
+#'
+#' @param parms a list of parameters.
+#' @param site_threat_array a matrix of the magnitute of each threat in each site.
+#'
+#' @export
 get.threat.intensity.category <- function(parms, site_threat_array) {
   #Set the category of threat intensity in a site.
   #Possible categories of threat intensity:
@@ -51,9 +56,12 @@ get.threat.intensity.category <- function(parms, site_threat_array) {
   out_mat
 }
 
-###
-# function for creating a matrix of all available levels of effort, for each action, at each site
-###
+#' Create site action intensity combination array.
+#'
+#' @inheritParams components_OF
+#' @param no.levels Number of threat categories (3).
+#'
+#' @export
 get.site.action.intensities.combs <- function(parms, site_threat_array_cat, no.levels = 3) {
   #Set the category of action intensity in a site.
   #Possible categories of action intensity (including No selection):
@@ -147,9 +155,15 @@ get.site.action.intensities.combs <- function(parms, site_threat_array_cat, no.l
   all_combs
 }
 
-###
-# function for creating a list with the costs of all levels of effort available for each action at each site
-###
+#' Create action cost list.
+#'
+#' Create a list with the costs of all levels of effort available for each action at each site.
+#'
+#' @param no.levels Number of threat categories (3).
+#' @inheritParams components_OF
+#' @inheritParams one_run
+#'
+#' @export
 get.action.costs <- function(site_threat_array_cat, planning_unit = NULL, no.levels = 3) {
   #define variables within the function
   no.sites <- nrow(site_threat_array_cat)
@@ -210,9 +224,13 @@ get.action.costs <- function(site_threat_array_cat, planning_unit = NULL, no.lev
   cost_list
 }
 
-###
-# function for creating a list of the actions required to abate all threats to each species
-###
+#' Create required action list
+#'
+#' It creates a list of the actions required to abate all threats to each species.
+#'
+#' @inheritParams components_OF
+#'
+#' @export
 get.required_actions <- function(site_threat_array_cat, responses_to_actions, cons_feat_array) {
   no.sites <- nrow(site_threat_array_cat)
   no.species <- nrow(cons_feat_array)
@@ -257,10 +275,15 @@ get.required_actions <- function(site_threat_array_cat, responses_to_actions, co
   aggregate_output_2
 }
 
-###
-# function for setting targets
-###
-set_fixed_targets <- function(cons_feat_array, site_species_array, target.level) {
+#' Set fixed feature targets.
+#'
+#' Calculate constant feature targets for all features. It modifies the \code{cons_feat_array}.
+#'
+#' @param target_level The target level. Numeric.
+#' @inheritParams components_OF
+#'
+#' @export
+set_fixed_targets <- function(cons_feat_array, site_species_array, target_level) {
 
   #browser()
 
@@ -270,12 +293,12 @@ set_fixed_targets <- function(cons_feat_array, site_species_array, target.level)
   tot_occ_area_per_species <- as.numeric(apply(site_species_array,2,sum))
 
   # get target values for species with area of occupancy smaller than the target
-  occupancy_smaller_than_target <- which(tot_occ_area_per_species <= target.level)
+  occupancy_smaller_than_target <- which(tot_occ_area_per_species <= target_level)
   Target_values[occupancy_smaller_than_target] <- tot_occ_area_per_species[occupancy_smaller_than_target]
 
   # get target values for species with area of occupancy larger than the target
-  occupancy_larger_than_target <- which(tot_occ_area_per_species > target.level)
-  Target_values[occupancy_larger_than_target] <- rep(target.level, length(occupancy_larger_than_target))
+  occupancy_larger_than_target <- which(tot_occ_area_per_species > target_level)
+  Target_values[occupancy_larger_than_target] <- rep(target_level, length(occupancy_larger_than_target))
 
   # edit input file
   cons_feat_array[, "target"] <- Target_values
@@ -283,6 +306,17 @@ set_fixed_targets <- function(cons_feat_array, site_species_array, target.level)
   cons_feat_array
 }
 
+#' Set area-scaled targets.
+#'
+#' Calculate feature targets which are linearly scaled to each feature's area of occupancy.
+#'   It uses linear interpolation and the function \code{approx()}. It modifies the
+#'   \code{cons_feat_array}.
+#'
+#' @param occurrence_limits a numeric vector of the occurrence limits of the interpolation.
+#' @param target_limits a numeric vector of the target limits of the interpolation.
+#' @inheritParams components_OF
+#'
+#' @export
 set_scaled_targets <- function(cons_feat_array, occurrence_limits, target_limits) {
 
   # species targets are linearly scaled to species' area of occupancy
@@ -320,22 +354,39 @@ set_scaled_targets <- function(cons_feat_array, occurrence_limits, target_limits
 
 }
 
-###
-# functions for pre processing experts' answers
-###
-
+#' Normalize experts' lower bounds.
+#'
+#' It applies the normalization formula described in Mcbride et al. 2012.
+#'
+#' @param best_g the expert's best guess.
+#' @param lower_b the expert's lower bound.
+#' @param confid the expert's confidence level.
+#' @param possib_lev the possibility level to normalize to.
+#'
+#' @export
 cal_norm_lower_bound <- function(best_g, lower_b, confid, possib_lev) {
 
   best_g - (best_g - lower_b) * (possib_lev / confid)
 
 }
 
+#' Normalize experts' upper bounds.
+#'
+#' It applies the normalization formula described in Mcbride et al. 2012.
+#'
+#' @param best_g the expert's best guess.
+#' @param upper_b the expert's upper bound.
+#' @param confid the expert's confidence level.
+#' @param possib_lev the possibility level to normalize to.
+#'
+#' @export
 cal_norm_upper_bound <- function(best_g, upper_b, confid, possib_lev) {
 
   best_g + (upper_b - best_g) * (possib_lev / confid)
 
 }
 
+#' @export
 subset_responses <- function(x, original_ids, new_ids) {
 
   intensity_levels <- length(unique(x$Intensity))
@@ -354,6 +405,7 @@ subset_responses <- function(x, original_ids, new_ids) {
 
 }
 
+#' @export
 average_responses <- function(responses_ind_experts, vars, base_info, fauna_ex_ind) {
 
   species_responses <- NULL
@@ -388,6 +440,7 @@ average_responses <- function(responses_ind_experts, vars, base_info, fauna_ex_i
   species_responses
 }
 
+#' @export
 cap_norm_lower_bound <- function(x) {
 
   x$norm_lower <- pmax(cal_norm_lower_bound(x$PP_BestGuess, x$PP_Lower, x$Confidence, 100), 0)
@@ -397,6 +450,7 @@ cap_norm_lower_bound <- function(x) {
 }
 
 
+#' @export
 cap_norm_upper_bound <- function(x) {
 
   x$norm_upper <- pmin(cal_norm_upper_bound(x$PP_BestGuess, x$PP_Upper, x$Confidence, 100), 1)
@@ -405,6 +459,7 @@ cap_norm_upper_bound <- function(x) {
 
 }
 
+#' @export
 get.responses.to.actions <- function(species_responses, cons_feat_array, estimate, no.levels = 3) {
 
   #define variables within the function

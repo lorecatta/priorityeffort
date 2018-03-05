@@ -1,4 +1,11 @@
-plot_representation_error <- function(aa, parms, analysis, by_var){
+#' Create and save a scatter plot of feature representation error
+#'   for different target levels.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
+plot_representation_error <- function(aa, parms){
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))
 
@@ -18,7 +25,7 @@ plot_representation_error <- function(aa, parms, analysis, by_var){
       units = "cm",
       res = 300)
 
-  p <- ggplot(aa, aes_string(x = "target_level", y = "mean_perc_change", colour = by_var)) +
+  p <- ggplot(aa, aes_string(x = "target_level", y = "mean_perc_change", colour = "response_type")) +
     geom_errorbar(aes(ymin = mean_perc_change - se_mean_perc_change,
                       ymax = mean_perc_change + se_mean_perc_change),
                   width = .5) +

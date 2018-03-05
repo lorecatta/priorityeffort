@@ -1,3 +1,8 @@
+#' Plot temperature, cost and feature penalty during the annealing routine.
+#'
+#' @param solution a solution object. A list.
+#'
+#' @export
 plot_trackers <- function(solution){
 
   ann_summary <- solution$summary

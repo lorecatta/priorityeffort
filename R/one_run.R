@@ -1,3 +1,12 @@
+#' Wrapper for vectorizing \code{one_run()}.
+#'
+#' @param parms a list of parameters.
+#' @param exp_des the fulls set of parameter combinations to run the prioritization on.
+#' @param parallel a logical determining wheather the vectorization is performed in parallel.
+#' @inheritParams one_run
+#' @inheritParams components_OF
+#'
+#' @export
 wrapper <- function(parms,
                     exp_des,
                     site_threat_array,
@@ -50,6 +59,16 @@ wrapper <- function(parms,
 
 }
 
+#' Reshape the data in the desired form and feed them to the function which runs
+#'   the prioritization. Collects the outputs as well.
+#'
+#' @param x a one line data frame with the parameters to be used in the run.
+#' @param parms a list of parameters.
+#' @param planning_unit a matrix of the cost of abating completely each threat (columns)
+#'   in each site.
+#' @inheritParams components_OF
+#'
+#' @export
 one_run <- function(x,
                     parms,
                     site_threat_array,

@@ -1,3 +1,8 @@
+#' Performs the prioritization using simulated annealing.
+#'
+#' @inheritParams components_OF
+#'
+#' @export
 Optimize <- function(parameters,
                      cons_feat_array,
                      all_site_action_int_combs,
@@ -33,7 +38,8 @@ Optimize <- function(parameters,
   list_of_outputs <- vector("list", 4)
 
   #calculate the initial components of the objective function
-  initial_solution <- components.OF(cons_feat_array,
+  initial_solution <- components_OF(parameters,
+                                    cons_feat_array,
                                     all_site_action_int_combs,
                                     site_action_array,
                                     action_costs,

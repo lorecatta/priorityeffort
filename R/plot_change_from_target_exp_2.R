@@ -1,3 +1,10 @@
+#' Create and save a scatter plot of percentage change in feature representation from target,
+#'   for different target levels.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
 plot_change_from_target <- function(aa, parms){
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))

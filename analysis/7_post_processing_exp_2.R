@@ -100,7 +100,6 @@ data_to_plot$response_type <- factor(data_to_plot$response_type,
 
 plot_representation_error(aa = data_to_plot,
                           parms = parameters,
-                          analysis = analysis_sub_directory,
                           by_var = "response_type")
 
 
@@ -117,7 +116,6 @@ levels(data_to_plot_long$species_prop) <- c("Below target", "Above target")
 
 plot_species_proportions(aa = data_to_plot_long,
                          parms = parameters,
-                         analysis = analysis_sub_directory,
                          by_var = "response_type")
 
 

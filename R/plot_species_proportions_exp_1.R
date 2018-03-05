@@ -1,3 +1,9 @@
+#' Create and save a bar plot of the proportion of species above and below target.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
 bar_plot_species_proportions <- function(aa, parms){
 
   my_labs <- as_labeller(c(`below target` = "Below target",

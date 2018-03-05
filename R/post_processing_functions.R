@@ -1,3 +1,8 @@
+#' Get diagnostics from a prioritization solution.
+#'
+#' @param solution a solution object. A list.
+#'
+#' @export
 get_run_diagnostics <- function(solution) {
 
   #cat("run =", j, "\n") #debugging
@@ -21,6 +26,14 @@ get_run_diagnostics <- function(solution) {
 
 }
 
+#' Get indices of best runs
+#'
+#' The function returns the indices of the runs with lowest objective function value among their replicate runs.
+#'
+#' @param my_data a data frame with summary diagnotics for each experiment run.
+#' @param runs number of replicates in the experiment.
+#'
+#' @export
 moving_index_search <- function(my_data, runs){
 
   d <- seq_along(my_data[, "OF"])
@@ -31,6 +44,13 @@ moving_index_search <- function(my_data, runs){
 
 }
 
+#' Get indices of selected planning units.
+#'
+#' The function returns the indices of the planning units which have been selected at the end of the annealing.
+#'
+#' @param solution a solution object. A list.
+#'
+#' @export
 get_selected_pu_index <- function(solution){
 
   a <- apply(solution$site_action_array, 1, function(y) min(sum(y), 1))
@@ -39,6 +59,12 @@ get_selected_pu_index <- function(solution){
 
 }
 
+#' Calculate the proportion of the study region which has been selected.
+#'
+#' @param sel_pu_ind the output of \code{get_selected_pu_index()}.
+#' @param area_file the matrix of treated area for each threat (columns) at each site (rows).
+#'
+#' @export
 calc_daly_prop_selected <- function(sel_pu_ind, area_file){
 
   # NOTE: The treated are for buffalo control IS the planning unit area
@@ -50,6 +76,12 @@ calc_daly_prop_selected <- function(sel_pu_ind, area_file){
 
 }
 
+#' Create table 2 for paper.
+#'
+#' @param scaling_factors a list of action intensity scaling factors.
+#' @inheritParams components_OF
+#'
+#' @export
 get_cost_breakdown <- function(site_action_array,
                                treated_area_file,
                                action_cost_list,

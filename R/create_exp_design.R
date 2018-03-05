@@ -1,3 +1,8 @@
+#' Create a set of parameter combinations to run the prioritization on.
+#'
+#' @param parms a list of parameters.
+#'
+#' @export
 create_exp_des <- function(parms) {
 
   experiment_ID <- parms$Exp

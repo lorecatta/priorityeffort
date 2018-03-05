@@ -36,7 +36,8 @@ parameters <- list(
   target_limits = c(1, 0.1),
   TargetLevel = c(seq(50, 1000, 50), seq(1250, 10000, 250)),
   spf = 10,
-  print_every_iter = 5)
+  print_every_iter = 5,
+  start_prop = 0.2)
 
 
 # load context ----------------------------------------------------------------

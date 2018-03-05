@@ -1,3 +1,9 @@
+#' Create and save a bar plot of percentage change in feature representation from target.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
 bar_plot_change_from_target <- function(aa, parms) {
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))

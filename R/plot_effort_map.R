@@ -1,3 +1,11 @@
+#' Create and save a map of selected effort for each action.
+#'
+#' @param solution a solution object. A list.
+#' @param catch_shp the shape file of the subcatchments.
+#' @param river_shp the shape file of the rivers.
+#' @param catch_shp_outline the shape file of the study area border.
+#'
+#' @export
 plot_effort_map <- function(solution, catch_shp, river_shp, catch_shp_outline) {
 
   #browser()

@@ -1,4 +1,11 @@
-plot_species_proportions <- function(aa, parms, analysis, by_var){
+#' Create and save a scatter plot of the proportion of species above and below
+#'  target for different target levels.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
+plot_species_proportions <- function(aa, parms){
 
   out_pth <- file.path("figures", paste("exp", parms$Exp, sep="_"))
 
@@ -12,7 +19,7 @@ plot_species_proportions <- function(aa, parms, analysis, by_var){
       units = "cm",
       res = 300)
 
-  p <- ggplot(aa, aes_string(x = "target_level", y = "value", shape = by_var)) +
+  p <- ggplot(aa, aes_string(x = "target_level", y = "value", shape = "response_type")) +
     geom_point(size = 1) +
     facet_wrap(~ species_prop, nrow = 3) +
     labs(shape = "True response") +

@@ -1,20 +1,45 @@
+#' Wrapper for vectorizing \code{get.responses.to.actions()}.
+#'
+#' @param i the numeric index of the vector
+#' @inheritParams components_OF
+#'
+#' @export
 wrapper_to_get_responses <- function(i, species_responses, cons_feat_array) {
 
   get.responses.to.actions(species_responses, cons_feat_array, estimate = i)
 
 }
 
+#' Calculate a set of diagnostics for a specific assumption regarding reponses
+#'   uncertanity.
+#'
+#' @param a solution object. A list.
+#' @param b a list of species-action benefits calculated assuming that the true
+#'   species responses corresponds to the experts' best guesses, the lower
+#'   bounds and the upper bounds.
+#' @param c a character vector of name tags.
+#' @param all_run_results a list of solution objects.
+#' @param responses_to_actions_EXP a list of matrices with the benefit of selecting each
+#'   level of effort. Each matrix stores the benefit of implementing each level of effort
+#'   (rows) for different threat category at the site (columns) for each site-action
+#'   combination (list slot). The list has lenght equals to the combination of site
+#'   and actions. Response values are calculated assuming that the true species
+#'   responses corresponds to the experts' best guesses.
+#' @param output_by_species a logical indicating wheather a table for each species is saved.
+#' @inheritParams components_OF
+#'
+#' @export
 calculate_representation_error <- function(x,
                                            b,
                                            c,
                                            parms,
                                            cons_features,
-                                           site_threat_array_cat.mat,
+                                           site_threat_array_cat,
                                            all_run_results,
                                            action_cost_list,
                                            responses_to_actions_EXP,
                                            required_actions,
-                                           site_species_array.mat,
+                                           site_species_array,
                                            output_by_species) {
 
 
@@ -33,9 +58,9 @@ calculate_representation_error <- function(x,
   responses_to_actions_OBS <- b[[res_type]]
   OBS_response_tag <- c[[res_type]]
 
-  no.sites <- nrow(site_threat_array_cat.mat)
+  no.sites <- nrow(site_threat_array_cat)
   no.species <- nrow(cons_features)
-  no.actions <- ncol(site_threat_array_cat.mat)
+  no.actions <- ncol(site_threat_array_cat)
 
   # get site action array from the best run for a particular estimate and target level combination
   selected_sites_and_actions <- all_run_results[[ID_run]]$site_action_array
@@ -63,7 +88,7 @@ calculate_representation_error <- function(x,
         action,
         selected_sites_and_actions,
         action_cost_list,
-        site_threat_array_cat.mat,
+        site_threat_array_cat,
         responses_to_actions_EXP)
 
       SpeciesCount_list_EXP [[site]][action,] <- run_count_EXP[[2]]
@@ -74,7 +99,7 @@ calculate_representation_error <- function(x,
         action,
         selected_sites_and_actions,
         action_cost_list,
-        site_threat_array_cat.mat,
+        site_threat_array_cat,
         responses_to_actions_OBS)
 
       SpeciesCount_list_OBS [[site]][action,] <- run_count_OBS[[2]]
@@ -93,7 +118,7 @@ calculate_representation_error <- function(x,
   SpeciesBenefit_mat_OBS <- pmin(SpeciesCount_mat_OBS / required_actions, 1)
 
   # multiply by the area of occurrence of each species
-  SpeciesBenefit_mat_OBS <- SpeciesBenefit_mat_OBS * site_species_array.mat
+  SpeciesBenefit_mat_OBS <- SpeciesBenefit_mat_OBS * site_species_array
 
   # sum across sites
   SpeciesBenefit_vec_OBS <- apply(SpeciesBenefit_mat_OBS, 2, sum)
@@ -102,7 +127,7 @@ calculate_representation_error <- function(x,
   SpeciesCount_list_sum_EXP <- lapply(SpeciesCount_list_EXP, function(x){apply(x, 2, sum)})
   SpeciesCount_mat_EXP <- do.call(rbind, SpeciesCount_list_sum_EXP)
   SpeciesBenefit_mat_EXP <- pmin(SpeciesCount_mat_EXP / required_actions, 1)
-  SpeciesBenefit_mat_EXP <- SpeciesBenefit_mat_EXP * site_species_array.mat
+  SpeciesBenefit_mat_EXP <- SpeciesBenefit_mat_EXP * site_species_array
   SpeciesBenefit_vec_EXP <- apply(SpeciesBenefit_mat_EXP, 2, sum)
 
   # create output table
@@ -131,6 +156,11 @@ calculate_representation_error <- function(x,
 
 }
 
+#' Average uncertainty diagnostics across species.
+#'
+#' @param the output of \code{calculate_representation_error()}
+#'
+#' @export
 calc_uncertainty_diagnostics <- function(x){
 
   diagnostics <- c(

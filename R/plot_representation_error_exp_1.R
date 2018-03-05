@@ -1,3 +1,9 @@
+#' Create and save a bar plot of feature representation error.
+#'
+#' @param aa the dataframe with the data to plot.
+#' @param parms a list of parameters.
+#'
+#' @export
 bar_plot_representation_error <- function(aa, parms){
 
   #browser()
