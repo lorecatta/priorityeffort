@@ -3,24 +3,12 @@
 # set up context --------------------------------------------------------------
 
 
-my_resources <- c(
-  file.path("R", "create_exp_design.R"),
-  file.path("R", "pre_processing_functions.R"),
-  file.path("R", "count_persistence.R"),
-  file.path("R", "calculate_OF.R"),
-  file.path("R", "optimize_actions.R"),
-  file.path("R", "plot_trackers.R"),
-  file.path("R", "plot_effort_map.R"),
-  file.path("R", "one_run.R"),
-  file.path("R", "utility_functions.R"))
-
 my_pkgs <- c("priorityeffort")
 
 root <- "context"
 
 context::context_log_start()
 ctx <- context::context_save(path = root,
-                             sources = my_resources,
                              packages = my_pkgs)
 
 
