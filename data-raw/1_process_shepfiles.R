@@ -1,4 +1,5 @@
 
+library(sp)
 library(rgdal)
 library(rgeos)
 

@@ -1,6 +1,5 @@
 
-devtools::load_all() # need functions in /R
-
+library(priorityeffort)
 library(XLConnect)
 
 

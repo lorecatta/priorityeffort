@@ -1,5 +1,5 @@
 
-devtools::load_all() # need site_threat_array
+data(site_threat_array)
 
 library(rgdal)
 
