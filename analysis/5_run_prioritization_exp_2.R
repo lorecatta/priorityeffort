@@ -1,5 +1,6 @@
 
-devtools::load_all()
+
+# set up context --------------------------------------------------------------
 
 my_resources <- c(
   file.path("R", "create_exp_design.R"),

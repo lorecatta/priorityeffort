@@ -1,12 +1,4 @@
 
-devtools::load_all()
-
-library(ggplot2)
-library(dplyr)
-library(RColorBrewer)
-library(grid)
-library(ggsn)
-
 
 # define parameters -----------------------------------------------------------
 

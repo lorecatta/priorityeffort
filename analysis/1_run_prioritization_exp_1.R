@@ -1,5 +1,7 @@
 
-devtools::load_all()
+
+# set up context --------------------------------------------------------------
+
 
 my_resources <- c(
   file.path("R", "create_exp_design.R"),
@@ -12,7 +14,7 @@ my_resources <- c(
   file.path("R", "one_run.R"),
   file.path("R", "utility_functions.R"))
 
-my_pkgs <- c("ggplot2", "grid", "gridExtra", "dplyr", "rgeos", "RColorBrewer")
+my_pkgs <- c("priorityeffort")
 
 root <- "context"
 

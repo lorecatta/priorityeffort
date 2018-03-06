@@ -1,11 +1,6 @@
 
-devtools::load_all()
 
-library(ggplot2)
-library(reshape2)
-
-
-# define parameters ---------------------------------------
+# define parameters -----------------------------------------------------------
 
 
 parameters <- list(
