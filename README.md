@@ -4,7 +4,11 @@
 
 Optimization framework for spatial allocation of conservation management effort.
 
-This package contains the data and R code to perform prioritization of conservation management effort. 
+This package contains the data and R code underpinning the analysis presented in the following publication:
+
+[Cattarino, Hermoso, Carwardine, Adams, Kennard and Linke. In press. Information uncertainty influences conservation outcomes when prioritizing multi-action management efforts. Journal of Applied Ecology. doi:10.1111/1365-2664.13147] (http://onlinelibrary.wiley.com/doi/10.1111/1365-2664.13147/full)
+
+to perform prioritization of conservation management effort. 
 
 Please contact l.cattarino@imperial.ac.uk or pull a request on this github project if you have any queries.
 
