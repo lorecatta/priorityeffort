@@ -1,6 +1,6 @@
 # priorityeffort
 
-> Spatial priotization of conservation management effort
+> Spatial prioritization of conservation management effort
 
 Optimization framework for spatial allocation of conservation management effort.
 
