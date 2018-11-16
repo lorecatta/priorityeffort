@@ -4,7 +4,8 @@
 \alias{get.site.action.intensities.combs}
 \title{Create site action intensity combination array.}
 \usage{
-get.site.action.intensities.combs(parms, site_threat_array_cat, no.levels = 3)
+get.site.action.intensities.combs(parms, site_threat_array_cat,
+  no.levels = 3)
 }
 \arguments{
 \item{site_threat_array_cat}{a matrix of the category of magnitute for each threat

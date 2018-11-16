@@ -4,7 +4,8 @@
 \alias{get.action.costs}
 \title{Create action cost list.}
 \usage{
-get.action.costs(site_threat_array_cat, planning_unit = NULL, no.levels = 3)
+get.action.costs(site_threat_array_cat, planning_unit = NULL,
+  no.levels = 3)
 }
 \arguments{
 \item{site_threat_array_cat}{a matrix of the category of magnitute for each threat

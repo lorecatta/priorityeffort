@@ -5,8 +5,8 @@
 \title{Calculate the value of the objective function.}
 \usage{
 components_OF(parameters, cons_feat_array, all_site_action_int_combs,
-  site_action_array, action_costs, site_threat_array_cat, responses_to_actions,
-  site_species_array, required_actions)
+  site_action_array, action_costs, site_threat_array_cat,
+  responses_to_actions, site_species_array, required_actions)
 }
 \arguments{
 \item{parameters}{a list of parameters.}
