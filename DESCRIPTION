@@ -20,6 +20,6 @@ Imports:
     RColorBrewer,
     reshape2,
     ggsn
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Remotes:
     mrc-ide/context
