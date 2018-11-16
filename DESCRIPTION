@@ -7,6 +7,7 @@ Description: Prioritization of conservation management effort using simulated an
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/lorecatta/priorityeffort
 Imports: 
     sp,
     rgdal,
