@@ -78,12 +78,12 @@ all_exp_des_runs <- lapply(factor_combs,
                            c = response_types,
                            parms = parameters,
                            cons_features = cons_feat_array,
-                           site_threat_array_cat.mat = site_threat_array_cat,
+                           site_threat_array_cat = site_threat_array_cat,
                            all_run_results = results_exp,
                            action_cost_list = action_costs,
                            responses_to_actions_EXP = responses_to_actions_BG,
                            required_actions = required.actions,
-                           site_species_array.mat = site_species_array,
+                           site_species_array = site_species_array,
                            output_by_species = TRUE)
 
 all_errors <- lapply(all_exp_des_runs, calc_uncertainty_diagnostics)
