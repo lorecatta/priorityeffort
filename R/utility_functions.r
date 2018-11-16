@@ -1,3 +1,5 @@
+#' Loop using parLapply.
+#' @export
 loop <- function(..., parallel) {
   if (parallel) {
     parallel::parLapply(NULL, ...)
@@ -6,6 +8,8 @@ loop <- function(..., parallel) {
   }
 }
 
+#' wrapper over loop function.
+#' @export
 loop_simplify <- function(..., what) {
   vapply(loop(...), identity, what)
 }
@@ -18,6 +22,8 @@ write_out_rds <- function(dat, my_path, file_name) {
 
 }
 
+#' Save a csv file.
+#' @export
 write_out_csv <- function(dat, my_path, file_name) {
 
   dir.create(my_path, FALSE, TRUE)
@@ -29,6 +35,8 @@ write_out_csv <- function(dat, my_path, file_name) {
 
 }
 
+#' Save a text file.
+#' @export
 write_out_txt <- function(dat, my_path, file_name) {
 
   dir.create(my_path, FALSE, TRUE)
@@ -41,6 +49,8 @@ write_out_txt <- function(dat, my_path, file_name) {
 
 }
 
+#' Convert data frame to list.
+#' @export
 df_to_list <- function (x, use_names) {
   keep <- c("names", "class", "row.names")
   at <- attributes(x)
